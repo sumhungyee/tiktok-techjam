@@ -1,3 +1,6 @@
 !**/.gitkeep
 **/env/**
 **/.env
+**/.venv/**
+**/.idea
+test.db
