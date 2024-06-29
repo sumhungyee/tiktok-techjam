@@ -4,3 +4,7 @@
 **/.venv/**
 **/.idea
 test.db
+**/*.ipynb
+**/*.jpg
+**/*.png
+**/*.jfif
