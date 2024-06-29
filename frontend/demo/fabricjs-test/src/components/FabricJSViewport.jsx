@@ -8,18 +8,16 @@ import item3 from "../assets/SHEIN EZwear Women's Drawstring Side Asymmetrical H
 import item4 from "../assets/SHEIN MOD Ladies' Fashionable Asymmetrical Strap Ruffle Top, Light Yellow, Ideal For Summer Vacation.png";
 import item5 from "../assets/SHEIN MOD Women's Floral Print Shirred Wide Strap Tank Top.png";
 
-const FabricCanvas = () => {
+const FabricCanvas = (props) => {
     const [canvas, setCanvas] = useState();
 
     useEffect(() => {
         const c = new fabric.Canvas("canvas", {
-          height: 932,
-          width: 430,
+          height: props.canvasHeight,
+          width: props.canvasWidth,
           backgroundColor: "white",
         });
-    
-        //fabric.Object.prototype.cornerStyle = "rect";
-    
+
         setCanvas(c);
         return () => {
           c.dispose();
@@ -39,8 +37,8 @@ const FabricCanvas = () => {
               cornersize: 10,
               hasRotatingPoint: true,
 
-                scaleX: 0.3,
-                scaleY: 0.3,
+                scaleX: 0.28,
+                scaleY: 0.28,
 
             });
             canvas.add(img);
@@ -60,8 +58,8 @@ const FabricCanvas = () => {
               cornersize: 10,
               hasRotatingPoint: true,
 
-                scaleX: 0.3,
-                scaleY: 0.3,
+                scaleX: 0.28,
+                scaleY: 0.28,
 
             });
             canvas.add(img);
@@ -76,11 +74,14 @@ const FabricCanvas = () => {
     }
 
 
+    addTop(canvas);
+    addBottom(canvas);
+
     return (
     <div>
-      <button onClick={() => addTop(canvas)}>Random Top</button>
+      {/* <button onClick={() => addTop(canvas)}>Random Top</button>
       <button onClick={() => addBottom(canvas)}>Random Bottom</button>
-      <button onClick={() => deleteSelected(canvas)}>Delete Selected</button>
+      <button onClick={() => deleteSelected(canvas)}>Delete Selected</button> */}
 
       <canvas id="canvas" />
     </div>
