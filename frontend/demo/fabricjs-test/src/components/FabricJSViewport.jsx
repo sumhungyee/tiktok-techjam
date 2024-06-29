@@ -32,8 +32,8 @@ const FabricCanvas = () => {
 
         fabric.Image.fromURL(randomItem, (img) => {
             img.set({
-              left: 0,
-              top: 0,
+              left: 70,
+              top: 100,
               angle: 0,
               padding: 0,
               cornersize: 10,
@@ -53,8 +53,8 @@ const FabricCanvas = () => {
 
         fabric.Image.fromURL(randomItem, (img) => {
             img.set({
-              left: 0,
-              top: 0,
+              left: 70,
+              top: 400,
               angle: 0,
               padding: 0,
               cornersize: 10,
