@@ -1,0 +1,138 @@
+.root {
+  position: relative;
+  width: 100vw;
+  height: 7vh;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: hidden;
+}
+.background {
+  position: absolute;
+  left: 0;
+  top: 0.33px;
+  width: 430px;
+  height: 82.67px;
+  background-color: #fff;
+  box-shadow: 0px -0.33px 0px 0px #d0d1d3;
+}
+.buttonShape {
+  position: absolute;
+  left: 185.5px;
+  top: 8.5px;
+  width: 43px;
+  height: 28px;
+  overflow: visible;
+}
+.icon {
+  width: 100%;
+  height: 100%;
+}
+.homeStrokeIcon {
+  position: absolute;
+  left: 29.5px;
+  top: 7px;
+  width: 23.2419px;
+  height: 20.9246px;
+  overflow: visible;
+}
+.icon2 {
+  width: 100%;
+  height: 100%;
+}
+.home {
+  color: #8a8b8f;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: Montserrat, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+  letter-spacing: 0.15px;
+  position: absolute;
+  left: 27.5px;
+  top: 32.5px;
+  width: min-content;
+  height: min-content;
+  white-space: nowrap;
+  flex-direction: column;
+}
+.searchIcon {
+  position: absolute;
+  left: 114px;
+  top: 7px;
+  width: 20.438px;
+  height: 20.8523px;
+  overflow: visible;
+}
+.icon3 {
+  width: 100%;
+  height: 100%;
+}
+.shopNow {
+  color: #161722;
+  font-size: 10px;
+  font-family: Montserrat, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+  letter-spacing: 0.15px;
+  position: absolute;
+  right: 290px;
+  top: 33px;
+  width: min-content;
+  height: min-content;
+  white-space: nowrap;
+  flex-direction: column;
+}
+.messageSolidIcon {
+  position: absolute;
+  left: 280px;
+  top: 8px;
+  width: 20px;
+  height: 20.5285px;
+  overflow: visible;
+}
+.icon4 {
+  width: 100%;
+  height: 100%;
+}
+.inbox {
+  color: #8a8b8f;
+  font-size: 10px;
+  font-family: Montserrat, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+  letter-spacing: 0.15px;
+  position: absolute;
+  left: 275.5px;
+  top: 32.5px;
+  width: min-content;
+  height: min-content;
+  text-align: center;
+  align-items: center;
+  white-space: nowrap;
+  flex-direction: column;
+}
+.accountStrokeIcon {
+  position: absolute;
+  left: 363.5px;
+  top: 7px;
+  width: 18.2163px;
+  height: 20.6828px;
+  overflow: visible;
+}
+.icon5 {
+  width: 100%;
+  height: 100%;
+}
+.me {
+  color: #8a8b8f;
+  font-size: 10px;
+  font-family: Montserrat, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+  letter-spacing: 0.15px;
+  position: absolute;
+  left: 365px;
+  top: 32.5px;
+  width: min-content;
+  height: min-content;
+  text-align: center;
+  align-items: center;
+  white-space: nowrap;
+  flex-direction: column;
+}
