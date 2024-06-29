@@ -1,3 +1,9 @@
+import os
+# Note: Manually create the "db" folder under the working directory before
+# running for first time
+os.environ['MINDWAVE_DATABASE_URL'] = 'sqlite:///./db/test.db'
+
+
 import random
 from backend.src.database.db_model import (add_image_processing, get_all_images,
                                            update_image_processed,

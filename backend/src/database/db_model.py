@@ -1,9 +1,12 @@
+import os
 from sqlalchemy import create_engine, Column, Integer, String, BLOB, CHAR
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 
-DATABASE_URL = "sqlite:///./test.db"
+DATABASE_URL = os.getenv('MINDWAVE_DATABASE_URL')
+if DATABASE_URL is None:
+    raise ValueError('Environment variable MINDWAVE_DATABASE_URL not set')
 engine = create_engine(DATABASE_URL, echo=False)
 Base = declarative_base()
 SessionMaker = sessionmaker(autocommit=False, autoflush=False, bind=engine)
