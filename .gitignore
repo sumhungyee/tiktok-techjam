@@ -8,3 +8,6 @@ test.db
 **/*.jpg
 **/*.png
 **/*.jfif
+**/__pycache__/**
+**/.ipynb_checkpoints/**
+**/.pytest_cache/**
