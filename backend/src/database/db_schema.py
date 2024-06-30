@@ -45,8 +45,8 @@ class ShopWardrobe(Base):
     item_id = Column(Integer, ForeignKey(Item.id), nullable=False)
     description = Column(VARCHAR(100))
     tags = Column(VARCHAR(100), nullable=True)
-    price_desc = Column(VARCHAR(200), nullable=True)
-    product_url = Column(VARCHAR(200), nullable=True)
+    price_desc = Column(VARCHAR(200), nullable=False)
+    product_url = Column(VARCHAR(200), nullable=False)
     item = relationship(Item)
 
 
