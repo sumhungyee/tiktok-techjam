@@ -5,7 +5,7 @@ os.environ['MINDWAVE_DATABASE_URL'] = 'sqlite:///./db/test.db'
 
 
 import random
-from backend.src.database.db_model import (add_image_processing, get_all_images,
+from src.database.db_model import (add_image_processing, get_all_images,
                                            update_image_processed,
                                            get_processed_image_from_raw_hash,
                                            delete_all_images)
