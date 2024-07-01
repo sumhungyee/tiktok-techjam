@@ -12,6 +12,8 @@ from backend.src.database.db_operations import DBOperation
 from hashlib import sha256
 from io import BytesIO
 from PIL import Image
+from sqlalchemy import text
+from sqlalchemy.exc import IntegrityError
 
 
 def get_thumbnail_and_sha256(image_data: bytes):
@@ -36,6 +38,7 @@ user_items = all_images[3:]
 @pytest.fixture
 def prefill_db():
     with DBOperation() as db:
+        db.session.execute(text('pragma foreign_keys=on'))
         db.nuke_everything(password="yesnukemeplease")
         assert len(db.get_all_items()) == 0
         db.add_user()
@@ -148,6 +151,16 @@ def test_add_item_to_shop_wardrobe(prefill_db):
         assert wardrobe2[0].tags == 'white'
 
 
+def test_non_existent_item_to_shop_wardrobe(prefill_db):
+    with pytest.raises(IntegrityError):
+        with DBOperation() as db:
+            db.add_item_to_shop_wardrobe(1, 99999, 'This is a top',
+                                         '$20', 'https://shop.com/top',
+                                         'red,dri-fit')
+            for item in db.get_shop_wardrobe(1):
+                print(item.item_id, item.item)
+
+
 def test_add_item_to_user_wishlist(prefill_db):
     test_add_item_to_shop_wardrobe(None)
     with DBOperation() as db:
@@ -164,3 +177,11 @@ def test_add_item_to_user_wishlist(prefill_db):
         assert wishlist1[1].shop_item.item.processed_image == shop_items[1][0]
         assert wishlist2[0].shop_item.item.image_hash == shop_items[2][2]
         assert wishlist2[0].shop_item.item.processed_image == shop_items[2][0]
+
+
+def test_non_existent_item_to_user_wishlist(prefill_db):
+    with pytest.raises(IntegrityError):
+        with DBOperation() as db:
+            db.add_item_to_user_wishlist(1, 99999)
+            for item in db.get_user_wishlist(1):
+                print(item.shop_item_id, item.shop_item)
