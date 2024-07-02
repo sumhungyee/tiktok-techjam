@@ -1,4 +1,4 @@
-from backend.src.database.db_base import engine
+from .db_base import engine
 from sqlalchemy import (Column, Integer, String, BLOB, CHAR, ForeignKey,
                         UniqueConstraint, VARCHAR)
 from sqlalchemy.orm import declarative_base, relationship

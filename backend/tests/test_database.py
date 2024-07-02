@@ -28,7 +28,7 @@ def get_thumbnail_and_sha256(image_data: bytes):
 
 all_images = []
 for i in range(6):
-    with open(f'backend/res/sample_images/{i + 1}.png', 'rb') as f:
+    with open(f'../res/sample_images/{i + 1}.png', 'rb') as f:
         img_bytes = f.read()
         all_images.append((img_bytes,) + get_thumbnail_and_sha256(img_bytes))
 shop_items = all_images[:3]
