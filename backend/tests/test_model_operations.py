@@ -1,6 +1,6 @@
 import tempfile
 import pytest
-from src.models.model_operations import get_image_bytes, load_image_from_bytes
+from src.models.model_operations import get_image_bytes, load_PIL_image_from_bytes
 import PIL
 from io import BytesIO
 from PIL import Image

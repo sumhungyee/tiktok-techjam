@@ -8,7 +8,7 @@ import base64
 import io
 import random
 import pytest
-from backend.src.database.db_operations import DBOperation
+from src.database.db_operations import DBOperation
 from hashlib import sha256
 from io import BytesIO
 from PIL import Image
