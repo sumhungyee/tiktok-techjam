@@ -1,7 +1,7 @@
 import os
 # Note: Manually create the "db" folder under the working directory before
 # running for first time
-os.environ['MINDWAVE_DATABASE_URL'] = 'sqlite:///./db/test.db'
+
 
 
 import base64

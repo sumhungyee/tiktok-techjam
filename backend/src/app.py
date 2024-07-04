@@ -24,9 +24,9 @@ def get_user_wishlist(user_id: int) -> list[UserWishlist]:
         return db.get_user_wishlist(user_id)
 
 @app.get("/shop/{shop_id}/wishlist")
-def get_shop_items(shop_idL: int) -> list[ShopWardrobe]:
+def get_shop_items(shop_id: int) -> list[ShopWardrobe]:
     with DBOperation() as db:
-        return db.get_shop_wardrobe(user_id)
+        return db.get_shop_wardrobe(shop_id)
     
 @app.get("/shop/{shop_id}/{item_id}/image")
 def get_shop_item(shop_id: int, item_id: int) -> ShopWardrobe | None:
