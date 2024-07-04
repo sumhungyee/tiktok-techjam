@@ -23,7 +23,7 @@ def load_PIL_image_from_bytes(bytes: bytes, resize: bool=False) -> Image.Image:
     return img
 
 def remove_background(input_image_bytes: bytes, resize: bool=False, **kwargs: Optional[any]) -> bytes:
-    input_image = load_image_from_bytes(input_image_bytes)
+    input_image = load_PIL_image_from_bytes(input_image_bytes)
     if resize:
         input_image = resize_to_max_dim(input_image)
     output_image = remove(input_image, **kwargs)

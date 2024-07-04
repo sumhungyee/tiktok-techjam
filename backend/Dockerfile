@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 1234
 
 # Run the command to start the application
-CMD ["python", "app.py"]
+CMD ["python", "-m", "src.app"]
