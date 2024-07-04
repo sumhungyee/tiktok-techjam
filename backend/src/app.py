@@ -1,16 +1,28 @@
+import os 
+os.environ['MINDWAVE_DATABASE_URL'] = 'sqlite:///./db/test.db'
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import StreamingResponse
-from src.database.db_schema import Item, User, UserWardrobe, UserWishlist, ShopWardrobe
-from src.database.db_operations import DBOperation
-from src.models.model_operations import (
-    get_image_bytes, load_image_from_bytes, remove_background, resize_to_max_dim, generate_image_hash, get_MIME_from_PIL
+from backend.src.database.db_schema import Item, User, UserWardrobe, UserWishlist, ShopWardrobe
+from backend.src.database.db_operations import DBOperation
+from backend.src.models.model_operations import (
+    get_image_bytes, load_PIL_image_from_bytes, remove_background, resize_to_max_dim,
+    create_small_thumbnail, generate_image_hash, get_MIME_from_PIL
     )
 from email.mime.image import MIMEImage
 import io
+from dotenv import load_dotenv
+
+# load_dotenv()
+# DATABASE_URL = os.getenv('MINDWAVE_DATABASE_URL')
 
 
 app = FastAPI()
 
+def initialise_db_w_mock_data() -> None:
+    '''initialise database with first user and first shop'''
+    with DBOperation() as db:
+        db.add_user()
+        db.add_shop()
 
 @app.get("/user/{user_id}/wardrobe")
 def get_user_wardrobe(user_id: int) -> list[UserWardrobe]:
@@ -22,7 +34,7 @@ def get_user_wishlist(user_id: int) -> list[UserWishlist]:
     with DBOperation() as db:  
         return db.get_user_wishlist()
 
-@app.get("/shop/{shop_id}/wishlist")
+@app.get("/shop/{shop_id}/wardrobe")
 def get_shop_items(shop_idL: int) -> list[ShopWardrobe]:
     with DBOperation() as db:
         return db.get_shop_wardrobe()
