@@ -13,7 +13,7 @@ class Item(Base):
     image_hash = Column(CHAR(64), index=True, nullable=False)
     accessory_part = Column(String, nullable=False)
     processed_image = Column(BLOB, nullable=True)
-    image_thumbnail = Column(String, nullable=False)
+    image_thumbnail = Column(String, nullable=True)
 
 
 class User(Base):

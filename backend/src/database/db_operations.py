@@ -42,31 +42,31 @@ class DBOperation:
         shops = self.session.query(Shop).all()
         return shops
 
-    def add_item(self, image_hash: str, accessory_part: str, thumbnail: str):
+    def add_item(self, image_hash: str, accessory_part: str):
         """
         Adds the item to the database, while its image submitted for processing
         :param image_hash: hash of the item's raw image
         :param accessory_part: accessory part
-        :param thumbnail: thumbnail of the image, in base64 format
         :return: ID of the item that was added
         """
-        new_image = Item(image_hash=image_hash, accessory_part=accessory_part,
-                         image_thumbnail=thumbnail)
+        new_image = Item(image_hash=image_hash, accessory_part=accessory_part)
         self.session.add(new_image)
         self.session.commit()
         image_id = new_image.id
         return image_id
 
-    def set_item_processed_image(self, item_id, processed_image):
+    def set_item_processed_image(self, item_id, processed_image, thumbnail):
         """
         Updates the item with its processed image
         :param item_id: ID of the item that was obtained from
         add_image_processing
         :param processed_image: Processed image binary data, byte-like object
+        :param thumbnail: thumbnail of the image, in base64 format
         """
         item = self.session.query(Item).filter(Item.id == item_id).first()
         if item is not None:
             item.processed_image = processed_image
+            item.image_thumbnail = thumbnail
         self.session.commit()
 
     def get_item_from_raw_hash(self, image_hash) -> Union[Item | None]:
@@ -162,6 +162,32 @@ class DBOperation:
             UserWishlist.user_id == user_id
         ).all()
         return user_wishlist
+
+    def get_user_wardrobe_item(self, user_id: int, item_id: int):
+        """
+        Get the item in the user's wardrobe
+        :param user_id: ID of the user
+        :param item_id: ID of the item
+        :return: UserWardrobe object, or None if not found
+        """
+        item = self.session.query(UserWardrobe).filter(
+            UserWardrobe.user_id == user_id,
+            UserWardrobe.id == item_id
+        ).first()
+        return item
+
+    def get_shop_wardrobe_item(self, shop_id: int, item_id: int):
+        """
+        Get the item in the shop's wardrobe
+        :param shop_id: ID of the shop
+        :param item_id: ID of the item
+        :return: ShopWardrobe object, or None if not found
+        """
+        item = self.session.query(ShopWardrobe).filter(
+            ShopWardrobe.shop_id == shop_id,
+            ShopWardrobe.id == item_id
+        ).first()
+        return item
 
     def nuke_everything(self, password: str):
         """
