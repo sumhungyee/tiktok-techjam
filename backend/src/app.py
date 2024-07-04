@@ -7,25 +7,26 @@ from src.models.model_operations import (
     )
 from email.mime.image import MIMEImage
 import io
+from dotenv import load_dotenv
 
-
+load_dotenv()
 app = FastAPI()
 
 
 @app.get("/user/{user_id}/wardrobe")
 def get_user_wardrobe(user_id: int) -> list[UserWardrobe]:
     with DBOperation() as db:
-        return db.get_user_wardrobe()
+        return db.get_user_wardrobe(user_id)
 
 @app.get("/user/{user_id}/wishlist")
 def get_user_wishlist(user_id: int) -> list[UserWishlist]:
     with DBOperation() as db:  
-        return db.get_user_wishlist()
+        return db.get_user_wishlist(user_id)
 
 @app.get("/shop/{shop_id}/wishlist")
 def get_shop_items(shop_idL: int) -> list[ShopWardrobe]:
     with DBOperation() as db:
-        return db.get_shop_wardrobe()
+        return db.get_shop_wardrobe(user_id)
     
 @app.get("/shop/{shop_id}/{item_id}/image")
 def get_shop_item(shop_id: int, item_id: int) -> ShopWardrobe | None:
