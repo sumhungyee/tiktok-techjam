@@ -23,7 +23,7 @@ def get_user_wishlist(user_id: int) -> list[UserWishlist]:
     with DBOperation() as db:  
         return db.get_user_wishlist(user_id)
 
-@app.get("/shop/{shop_id}/wishlist")
+@app.get("/shop/{shop_id}/wardrobe")
 def get_shop_items(shop_id: int) -> list[ShopWardrobe]:
     with DBOperation() as db:
         return db.get_shop_wardrobe(shop_id)
