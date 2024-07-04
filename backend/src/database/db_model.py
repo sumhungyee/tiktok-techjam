@@ -1,19 +1,18 @@
 import os
-from sqlalchemy import create_engine, Column, Integer, String, BLOB, CHAR
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import sessionmaker
 
+from sqlalchemy import BLOB, CHAR, Column, Integer, String, create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
 
-DATABASE_URL = os.getenv('MINDWAVE_DATABASE_URL')
+DATABASE_URL = os.getenv("MINDWAVE_DATABASE_URL")
 if DATABASE_URL is None:
-    raise ValueError('Environment variable MINDWAVE_DATABASE_URL not set')
+    raise ValueError("Environment variable MINDWAVE_DATABASE_URL not set")
 engine = create_engine(DATABASE_URL, echo=False)
 Base = declarative_base()
 SessionMaker = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 class Image(Base):
-    __tablename__ = 'images'
+    __tablename__ = "images"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     image_hash = Column(CHAR(64), index=True, nullable=False)
     accessory_part = Column(String, nullable=False)
@@ -60,9 +59,7 @@ def get_processed_image_from_raw_hash(image_hash) -> Image | None:
     :return: the Image object, or None if not found
     """
     session = SessionMaker()
-    image = session.query(Image).filter(
-        Image.image_hash == image_hash
-    ).first()
+    image = session.query(Image).filter(Image.image_hash == image_hash).first()
     session.close()
     return image
 
