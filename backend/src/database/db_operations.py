@@ -1,6 +1,6 @@
-from backend.src.database.db_base import SessionMaker
-from backend.src.database.db_schema import (Item, UserWardrobe, ShopWardrobe,
-                                            UserWishlist, User, Shop)
+from src.database.db_base import SessionMaker
+from src.database.db_schema import (Item, UserWardrobe, ShopWardrobe,
+                                    UserWishlist, User, Shop)
 from typing import Union, List
 
 
