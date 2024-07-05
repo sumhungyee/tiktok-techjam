@@ -10,3 +10,4 @@ test.db
 **/.ipynb_checkpoints/**
 **/.pytest_cache/**
 backend/prefill.env
+**/.DS_Store
