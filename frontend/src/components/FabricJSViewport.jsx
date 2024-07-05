@@ -34,7 +34,7 @@ const FabricCanvas = (props) => {
 
     useEffect(() => {
         const c = new fabric.Canvas("canvas", {
-          height: props.canvasHeight - 180,
+          height: props.canvasHeight - 175,
           width: props.canvasWidth,
           backgroundColor: "white",
         });
@@ -150,7 +150,10 @@ const FabricCanvas = (props) => {
       <Box
         width={props.canvasWidth}
         height="15vh"
-        padding={5}
+        paddingLeft={5}
+        paddingRight={5}
+        paddingBottom={5}
+        paddingTop={1}
         marginBottom={10}
       >
         <Text 
