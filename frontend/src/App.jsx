@@ -22,7 +22,8 @@ function App() {
           canvasWidth={window.innerWidth}
           canvasHeight={canvasHeight}
         />
-        <TabBar /> */}
+        */}
+        <TabBar />
       </ChakraProvider>
     </>
   )

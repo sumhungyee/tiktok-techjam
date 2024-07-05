@@ -1,5 +1,4 @@
-// TO DO: get image as the background, then add transparent buttons
-import React, {useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Button,
     Image,
@@ -12,51 +11,49 @@ import wardrobeButton from '../assets/wardrobe_button.png'
 
 
 const ShopPage = (props) => {
-    const [wardrobeButtonVisible, setWardrobeButtonVisible] = useState(true);
-    const handleClick = () => {
-        setWardrobeButtonVisible(false);
-      };
-
     return (
-    <>
-    <Stack direction='row' position='relative'>
-        <Box position='relative'>
-            <Image
-                boxSize='910px'
-                src={shopimage} 
-                alt='Shop home page'
-            />
-
-            <Image 
-                src={wardrobeButton} 
-                alt='Go to wardrobe button' 
-                position='absolute'
-                bottom='-20px'
-                left='50%'
-                transform='translateX(-50%) scale(0.9)'
-            />  
-        {wardrobeButtonVisible && (
-            <Button
-                position='absolute'
-                bottom='50px'  
-                left='50%'
-                transform='translateX(-50%) scale(2.6)'
-                bg='transparent'
-                color='transparent'
-                // bg='white' // for button to appear
-                // color='black' // for button to appear
-                size='md'
-                onClick={handleClick} 
+        <>
+            {/* Aditya, behold: css-in-html-in-js */}
+            <style> 
+                {`
+                    @keyframes shadowColorChange {
+                        0% { box-shadow: 0 0 0 4px #fd2c54; }
+                        25% { box-shadow: 0 0 0 4px #fda234; }
+                        50% { box-shadow: 0 0 0 4px #12bf4c; }
+                        75% { box-shadow: 0 0 0 4px #4568dc; }
+                        100% { box-shadow: 0 0 0 4px #fd2c54; }
+                    }
+                `}
+            </style>
+            <Stack 
+                width={'100vw'}
+                height={'93vh'}
+                align={'center'}
+            >
+                <Image
+                    src={shopimage}
+                    width={'100vw'}
+                    height={'100%'}
+                    objectFit='cover'
+                    objectPosition = 'top'
+                />
+                <Button
+                    position='absolute'
+                    top={'85vh'}
+                    size={'lg'}
+                    bg='#fd2c54'
+                    color='white'
+                    _focus={{ bg: '#fd2c54' }}
+                    _active={{ bg: '#fd2c54' }}
+                    _hover={{ bg: '#fd2c54' }}
+                    sx={{
+                        animation: 'shadowColorChange 3s infinite',
+                    }}
                 >
-                Click Me
-            </Button>
-        )}
-        </Box>
-    </Stack>  
-
-
-
-    </>
+                    Go To Wardrobe!
+                </Button>
+            </Stack>  
+        </>
     );
 };
 

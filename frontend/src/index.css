@@ -13,6 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
 
   padding: 0;
+  overflow: hidden;
 }
 
 a {
