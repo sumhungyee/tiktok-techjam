@@ -6,6 +6,7 @@ import './App.css'
 
 import FabricCanvas from './components/FabricJSViewport'
 import { TabBar } from './components/Figma/TabBar/TabBar';
+import ShopPage from './components/ShopPage'
 
 function App() {
   const canvasHeight = window.innerHeight * 0.93;
@@ -13,11 +14,15 @@ function App() {
   return (
     <>
       <ChakraProvider>
-        <FabricCanvas 
+        <ShopPage
+        canvasWidth={window.innerWidth}
+        canvasHeight={canvasHeight}
+        />
+        {/* <FabricCanvas 
           canvasWidth={window.innerWidth}
           canvasHeight={canvasHeight}
         />
-        <TabBar />
+        <TabBar /> */}
       </ChakraProvider>
     </>
   )
