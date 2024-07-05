@@ -7,7 +7,6 @@ import {
   } from '@chakra-ui/react';
 
 import shopimage from '../assets/tiktokshop.jpeg'
-import wardrobeButton from '../assets/wardrobe_button.png'
 
 
 const ShopPage = (props) => {
