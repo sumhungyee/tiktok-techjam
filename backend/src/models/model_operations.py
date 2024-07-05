@@ -94,6 +94,7 @@ def classify_processed_image(image: Image.Image, model: CLIPModel, processor: CL
     inputs = processor(text=get_classes(),
                    images=image, return_tensors="pt", padding=True)
     outputs = model(**inputs)
-    logits_per_image = outputs.logits_per_image  # this is the image-text similarity score
+    logits_per_image = outputs.logits_per_image
     probs = logits_per_image.softmax(dim=1) 
+
     return get_classes()[np.argmax(probs.detach().numpy())]
