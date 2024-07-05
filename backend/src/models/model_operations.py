@@ -29,6 +29,7 @@ def get_image_bytes(image: Image.Image, resize: bool=False) -> bytes:
     image.save(image_byte_array, format='png')
     return image_byte_array.getvalue()
 
+  
 @timer
 def load_PIL_image_from_bytes(bytes: bytes, resize: bool=False) -> Image.Image:
     image_byte_array = BytesIO(bytes)
@@ -36,6 +37,7 @@ def load_PIL_image_from_bytes(bytes: bytes, resize: bool=False) -> Image.Image:
     if resize:
         return resize_to_max_dim(img)
     return img
+
 
 @timer
 def remove_background(input_image_bytes: bytes, resize: bool=False, crop_image: bool = True, **kwargs: Optional[any]) -> bytes:
