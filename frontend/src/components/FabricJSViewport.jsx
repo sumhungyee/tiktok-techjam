@@ -22,6 +22,8 @@ import { FreeMode, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
+import { useNavigate } from "react-router";
+import { ChevronLeft } from "lucide-react";
 
 import Lists from "../pages/Lists";
 
@@ -41,9 +43,6 @@ const ListsDrawer = ({
 }) => {
   return (
     <>
-      {/* <Button ref={drawerTriggerBtnRef} colorScheme='teal' onClick={onOpen}>
-        Open
-      </Button> */}
       <Drawer
         isOpen={isOpen}
         placement="bottom"
@@ -56,14 +55,16 @@ const ListsDrawer = ({
       >
         <DrawerOverlay />
         <DrawerContent padding={0} margin={0} className="p-0 m-0">
-          <DrawerCloseButton
-            position="relative"
-            left="90vw"
-            top="8vh"
-            zIndex="10"
-            outline="1px solid black"
-            rounded="full"
-          />
+          <DrawerCloseButton position={"relative"} left={"6.5rem"} top={"1rem"}>
+            <Button
+              leftIcon={<ChevronLeft />}
+              onClick={() => onOpen(false)}
+              variant="ghost"
+              mx={0}
+            >
+              <Text>Back to dressing room</Text>
+            </Button>
+          </DrawerCloseButton>
 
           <DrawerBody padding={0} mt="2rem">
             <Lists handleItemCardClick={handleItemCardClick} />
@@ -75,6 +76,8 @@ const ListsDrawer = ({
 };
 
 const FabricCanvas = (props) => {
+  const navigate = useNavigate();
+
   const [canvas, setCanvas] = useState();
 
   const {
@@ -143,7 +146,22 @@ const FabricCanvas = (props) => {
   return (
     <div>
       <canvas id="canvas" />
-
+      <button
+        style={{
+          position: "absolute",
+          top: "35px",
+          left: "35px",
+          fontSize: "18px",
+          alignItems: "center",
+          display: "flex",
+          gap: "10px",
+        }}
+        onClick={() => navigate(-1)}
+        ref={drawerTriggerBtnRef}
+      >
+        <ChevronLeft className="mr-3"/>
+        {"Back to shop"}
+      </button>
       <button
         style={{
           position: "absolute",
