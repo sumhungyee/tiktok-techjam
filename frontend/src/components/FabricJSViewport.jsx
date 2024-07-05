@@ -9,15 +9,23 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-  AlertDialogCloseButton,
   Box,
   Text,
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
 } from '@chakra-ui/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/pagination';
+
+import Lists from '../pages/Lists';
 
 // Will be served via API later
 import item1 from '../assets/Pleated Skirt mimi momo.png';
@@ -26,11 +34,44 @@ import item3 from "../assets/SHEIN EZwear Women's Drawstring Side Asymmetrical H
 import item4 from "../assets/SHEIN MOD Ladies' Fashionable Asymmetrical Strap Ruffle Top, Light Yellow, Ideal For Summer Vacation.png";
 import item5 from "../assets/SHEIN MOD Women's Floral Print Shirred Wide Strap Tank Top.png";
 
+const ListsDrawer = ({ isOpen, onOpen, onClose, drawerTriggerBtnRef }) => {
+  return (
+    <>
+      {/* <Button ref={drawerTriggerBtnRef} colorScheme='teal' onClick={onOpen}>
+        Open
+      </Button> */}
+      <Drawer
+        isOpen={isOpen}
+        placement='bottom'
+        onClose={onClose}
+        finalFocusRef={drawerTriggerBtnRef}
+        width="screen"
+        margin={0}
+        padding={0}
+        className="p-0 m-0"
+      >
+        <DrawerOverlay />
+        <DrawerContent padding={0} margin={0} className='p-0 m-0'>
+          <DrawerCloseButton position="relative" left="90vw" top="8vh" zIndex="10" outline="1px solid black" rounded="full"/>
+
+          <DrawerBody padding={0} mt="2rem">
+            <Lists />
+          </DrawerBody>
+
+        </DrawerContent>
+      </Drawer>
+    </>
+  )
+}
+
 const FabricCanvas = (props) => {
     const [canvas, setCanvas] = useState();
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen: isAlertDialogOpen, onOpen: onAlertDialogOpen, onClose: onAlertDialogClose } = useDisclosure()
     const cancelRef = React.useRef()
+
+    const { isOpen: isDrawerOpen, onOpen: onDrawerOpen, onClose: onDrawerClose } = useDisclosure()
+    const drawerTriggerBtnRef = React.useRef()
 
     useEffect(() => {
         const c = new fabric.Canvas("canvas", {
@@ -94,10 +135,13 @@ const FabricCanvas = (props) => {
           fontSize: "18px",
           alignItems: "center",
         }}
-        onClick={() => temp()}
+        onClick={onDrawerOpen}
+        ref={drawerTriggerBtnRef}
       >
         <b style={{fontSize: "25px", margin: 20}}>+</b> Add Clothes
       </button>
+
+      <ListsDrawer isOpen={isDrawerOpen} onOpen={onDrawerOpen} onClose={onDrawerClose} drawerTriggerBtnRef={drawerTriggerBtnRef} />
 
       <div
         style={{
@@ -110,7 +154,7 @@ const FabricCanvas = (props) => {
       >
         <button 
           style={{ fontSize: "25px", marginRight: 20}}
-          onClick={() => onOpen()}
+          onClick={() => onAlertDialogOpen()}
         > ↻ </button>
 
         <button 
@@ -120,9 +164,9 @@ const FabricCanvas = (props) => {
       </div>
 
       <AlertDialog
-        isOpen={isOpen}
+        isOpen={isAlertDialogOpen}
         leastDestructiveRef={cancelRef}
-        onClose={onClose}
+        onClose={onAlertDialogClose}
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
@@ -135,10 +179,10 @@ const FabricCanvas = (props) => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
+              <Button ref={cancelRef} onClick={onAlertDialogClose}>
                 Cancel
               </Button>
-              <Button colorScheme='red' onClick={() => {onClose(); deleteAll(canvas);}} ml={3}>
+              <Button colorScheme='red' onClick={() => {onAlertDialogClose(); deleteAll(canvas);}} ml={3}>
                 Clear
               </Button>
             </AlertDialogFooter>
