@@ -43,6 +43,7 @@ const ShopPage = (props) => {
                 transform='translateX(-50%) scale(2.6)'
                 bg='transparent'
                 color='transparent'
+                // bg='white' // for button to appear
                 // color='black' // for button to appear
                 size='md'
                 onClick={handleClick} 
