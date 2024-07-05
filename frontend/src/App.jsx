@@ -1,11 +1,15 @@
-import { useState } from 'react'
-import { ChakraProvider } from '@chakra-ui/react'
+// import { useState } from 'react'
+// import { ChakraProvider } from '@chakra-ui/react'
 
-import viteLogo from '/vite.svg'
+// import viteLogo from '/vite.svg'
 import './App.css'
 
 import FabricCanvas from './components/FabricJSViewport'
 import { TabBar } from './components/Figma/TabBar/TabBar';
+import ShopPage from './components/ShopPage'
+// import FabricCanvas from './components/FabricJSViewport'
+// import { TabBar } from './components/Figma/TabBar/TabBar';
+import Lists from './pages/Lists'
 
 function App() {
   const canvasHeight = window.innerHeight * 0.93;
@@ -13,12 +17,18 @@ function App() {
   return (
     <>
       <ChakraProvider>
-        <FabricCanvas 
+        <ShopPage
+        canvasWidth={window.innerWidth}
+        canvasHeight={canvasHeight}
+        />
+        {/* <FabricCanvas 
           canvasWidth={window.innerWidth}
           canvasHeight={canvasHeight}
         />
+        */}
         <TabBar />
       </ChakraProvider>
+      <Lists />
     </>
   )
 }
