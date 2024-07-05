@@ -1,5 +1,5 @@
 from src.database.db_base import engine
-from sqlalchemy import (Column, Integer, String, BLOB, CHAR, ForeignKey,
+from sqlalchemy import (Column, Integer, String, LargeBinary, CHAR, ForeignKey,
                         UniqueConstraint, VARCHAR)
 from sqlalchemy.orm import declarative_base, relationship
 
@@ -12,7 +12,7 @@ class Item(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     image_hash = Column(CHAR(64), index=True, nullable=False)
     accessory_part = Column(String, nullable=False)
-    processed_image = Column(BLOB, nullable=True)
+    processed_image = Column(LargeBinary, nullable=True)
     image_thumbnail = Column(String, nullable=True)
 
 

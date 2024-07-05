@@ -17,12 +17,16 @@ def get_image_bytes(image: Image.Image, resize: bool=False) -> bytes:
     return image_byte_array.getvalue()
 
 
-def load_PIL_image_from_bytes(bytes: bytes, resize: bool=False) -> Image.Image:
-    image_byte_array = BytesIO(bytes)
+def load_PIL_image_from_bytes(
+        img_bytes: bytes,
+        resize: bool=False
+) -> Image.Image:
+    image_byte_array = BytesIO(img_bytes)
     img = Image.open(image_byte_array)
     if resize:
         return resize_to_max_dim(img)
     return img
+
 
 def remove_background(input_image_bytes: bytes, resize: bool=False, **kwargs: Optional[any]) -> bytes:
     input_image = load_PIL_image_from_bytes(input_image_bytes)
