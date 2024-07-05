@@ -1,4 +1,5 @@
-from PIL import Image, ImageFile
+import base64
+from PIL import Image
 from typing import Optional
 from io import BytesIO
 from rembg import remove
@@ -11,12 +12,13 @@ import hashlib
 
 
 def get_image_bytes(image: Image.Image, resize: bool=False) -> bytes:
-    #ImageFile.LOAD_TRUNCATED_IMAGES = True
+    # ImageFile.LOAD_TRUNCATED_IMAGES = True
     if resize:
-        image = resize_to_max_dim(img)
+        image = resize_to_max_dim(image)
     image_byte_array = BytesIO()
     image.save(image_byte_array, format='png')
     return image_byte_array.getvalue()
+
 
 def load_PIL_image_from_bytes(bytes: bytes, resize: bool=False) -> Image.Image:
     image_byte_array = BytesIO(bytes)
@@ -34,16 +36,25 @@ def remove_background(input_image_bytes: bytes, resize: bool=False, crop_image: 
         output_image = crop_image(output_image)
     return get_image_bytes(output_image)
 
+
 def resize_to_max_dim(image: Image.Image, max_size=(1000, 1000)) -> Image.Image:
     copy = image.copy()
     copy.thumbnail(max_size)
     return copy
 
-def create_small_thumbnail(image: Image.Image) -> Image.Image:
-    return resize_to_max_dim(image, max_size=(200, 200))
+
+def create_small_thumbnail_base64(image: Image.Image) -> str:
+    thumbnail = resize_to_max_dim(image, max_size=(200, 200))
+    white_bg = Image.new("RGB", thumbnail.size, (255, 255, 255))
+    white_bg.paste(thumbnail.convert("RGB"), (0, 0), thumbnail)
+    with BytesIO() as buffer:
+        white_bg.save(buffer, format="JPEG")
+        return base64.b64encode(buffer.getvalue()).decode("utf-8")
+
 
 def generate_image_hash(image_bytes: bytes) -> str:
     return hashlib.sha256(image_bytes).hexdigest()
+
 
 def get_MIME_from_PIL(image: Image.Image) -> MIMEImage:
     with BytesIO() as buffer:
@@ -57,13 +68,8 @@ def crop_image(image: Image.Image) -> Image.Image:
     return copy.crop(copy.getbbox())
 
 def get_classes():
-    descriptor = [
-    "Red", "Blue", "Green", "Yellow", "Orange", "Purple",
-    "Pink", "Brown", "Black", "White", "Gray", "Cyan",
-    "Magenta", "Beige", "Maroon", "Navy", "Olive", "Teal",
-    "Lime", "Violet", "Denim"
-    ]
-    clothing_items = [
+   
+    return [
     "T-Shirt", "Crop Top", "Jeans", "Sweater", "Jacket",
     "Skirt", "Dress", "Shorts", "Blouse", "Pants",
     "Leggings", "Cardigan", "Hoodie", "Coat", "Tank Top",
@@ -76,7 +82,7 @@ def get_classes():
     "Kimono", "Pajamas", "Gown", "Dungarees"
     ]
 
-    return [f"{word1} {word2}" for word1 in descriptor for word2 in clothing_items]
+   
 
     # return ["dress", "T-shirt", "shorts", "jeans", "shoes", "skirt", "jacket", "suit", "hat", "glasses"]
 
