@@ -57,28 +57,28 @@ def crop_image(image: Image.Image) -> Image.Image:
     return copy.crop(copy.getbbox())
 
 def get_classes():
-    # descriptor = [
-    # "Red", "Blue", "Green", "Yellow", "Orange", "Purple",
-    # "Pink", "Brown", "Black", "White", "Gray", "Cyan",
-    # "Magenta", "Beige", "Maroon", "Navy", "Olive", "Teal",
-    # "Lime", "Violet", "Denim"
-    # ]
-    # clothing_items = [
-    # "T-Shirt", "Crop Top", "Jeans", "Sweater", "Jacket",
-    # "Skirt", "Dress", "Shorts", "Blouse", "Pants",
-    # "Leggings", "Cardigan", "Hoodie", "Coat", "Tank Top",
-    # "Suit", "Blazer", "Sweatshirt", "Overalls", "Tracksuit",
-    # "Scarf", "Hat", "Gloves", "Socks", "Boots",
-    # "Sneakers", "Sandals", "Heels", "Belt", "Tie",
-    # "Long Sleeved Shirt", "Vest", "Polo Shirt", "Cargo Pants",
-    # "Trench Coat", "Bathrobe", "Swimsuit",
-    # "Capris", "Camisole", "Peacoat", "Poncho", "Anorak",
-    # "Kimono", "Pajamas", "Gown", "Dungarees"
-    # ]
+    descriptor = [
+    "Red", "Blue", "Green", "Yellow", "Orange", "Purple",
+    "Pink", "Brown", "Black", "White", "Gray", "Cyan",
+    "Magenta", "Beige", "Maroon", "Navy", "Olive", "Teal",
+    "Lime", "Violet", "Denim"
+    ]
+    clothing_items = [
+    "T-Shirt", "Crop Top", "Jeans", "Sweater", "Jacket",
+    "Skirt", "Dress", "Shorts", "Blouse", "Pants",
+    "Leggings", "Cardigan", "Hoodie", "Coat", "Tank Top",
+    "Suit", "Blazer", "Sweatshirt", "Overalls", "Tracksuit",
+    "Scarf", "Hat", "Gloves", "Socks", "Boots",
+    "Sneakers", "Sandals", "Heels", "Belt", "Tie",
+    "Long Sleeved Shirt", "Vest", "Polo Shirt", "Cargo Pants",
+    "Trench Coat", "Bathrobe", "Swimsuit",
+    "Capris", "Camisole", "Peacoat", "Poncho", "Anorak",
+    "Kimono", "Pajamas", "Gown", "Dungarees"
+    ]
 
-    # return [f"{word1} {word2}" for word1 in descriptor for word2 in clothing_items]
+    return [f"{word1} {word2}" for word1 in descriptor for word2 in clothing_items]
 
-    return ["dress", "T-shirt", "shorts", "jeans", "shoes", "skirt", "jacket", "suit", "hat", "glasses"]
+    # return ["dress", "T-shirt", "shorts", "jeans", "shoes", "skirt", "jacket", "suit", "hat", "glasses"]
 
 def load_model(path : str="patrickjohncyh/fashion-clip") -> tuple[CLIPModel, CLIPProcessor]:
     return CLIPModel.from_pretrained(path), CLIPProcessor.from_pretrained(path)
