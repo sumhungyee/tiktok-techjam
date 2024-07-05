@@ -1,3 +1,5 @@
+import random
+import logging
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import StreamingResponse
 from io import BytesIO
