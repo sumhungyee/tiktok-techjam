@@ -2,7 +2,10 @@ from PIL import Image, ImageFile
 from typing import Optional
 from io import BytesIO
 from rembg import remove
+import numpy as np
+from typing import Iterable
 from email.mime.image import MIMEImage
+from transformers import CLIPProcessor, CLIPModel
 
 import hashlib
 
@@ -52,3 +55,39 @@ def get_MIME_from_PIL(image: Image.Image) -> MIMEImage:
 def crop_image(image: Image.Image) -> Image.Image:
     copy = image.copy()
     return copy.crop(copy.getbbox())
+
+def get_classes():
+    # descriptor = [
+    # "Red", "Blue", "Green", "Yellow", "Orange", "Purple",
+    # "Pink", "Brown", "Black", "White", "Gray", "Cyan",
+    # "Magenta", "Beige", "Maroon", "Navy", "Olive", "Teal",
+    # "Lime", "Violet", "Denim"
+    # ]
+    # clothing_items = [
+    # "T-Shirt", "Crop Top", "Jeans", "Sweater", "Jacket",
+    # "Skirt", "Dress", "Shorts", "Blouse", "Pants",
+    # "Leggings", "Cardigan", "Hoodie", "Coat", "Tank Top",
+    # "Suit", "Blazer", "Sweatshirt", "Overalls", "Tracksuit",
+    # "Scarf", "Hat", "Gloves", "Socks", "Boots",
+    # "Sneakers", "Sandals", "Heels", "Belt", "Tie",
+    # "Long Sleeved Shirt", "Vest", "Polo Shirt", "Cargo Pants",
+    # "Trench Coat", "Bathrobe", "Swimsuit",
+    # "Capris", "Camisole", "Peacoat", "Poncho", "Anorak",
+    # "Kimono", "Pajamas", "Gown", "Dungarees"
+    # ]
+
+    # return [f"{word1} {word2}" for word1 in descriptor for word2 in clothing_items]
+
+    return ["dress", "T-shirt", "shorts", "jeans", "shoes", "skirt", "jacket", "suit", "hat", "glasses"]
+
+def load_model(path : str="patrickjohncyh/fashion-clip") -> tuple[CLIPModel, CLIPProcessor]:
+    return CLIPModel.from_pretrained(path), CLIPProcessor.from_pretrained(path)
+
+def classify_processed_image(image: Image.Image, model: CLIPModel, processor: CLIPProcessor) -> str:
+    image = image.copy()
+    inputs = processor(text=get_classes(),
+                   images=image, return_tensors="pt", padding=True)
+    outputs = model(**inputs)
+    logits_per_image = outputs.logits_per_image  # this is the image-text similarity score
+    probs = logits_per_image.softmax(dim=1) 
+    return get_classes()[np.argmax(probs.detach().numpy())]
