@@ -22,11 +22,13 @@ def load_PIL_image_from_bytes(bytes: bytes, resize: bool=False) -> Image.Image:
         return resize_to_max_dim(img)
     return img
 
-def remove_background(input_image_bytes: bytes, resize: bool=False, **kwargs: Optional[any]) -> bytes:
+def remove_background(input_image_bytes: bytes, resize: bool=False, crop_image: bool = True, **kwargs: Optional[any]) -> bytes:
     input_image = load_PIL_image_from_bytes(input_image_bytes)
     if resize:
         input_image = resize_to_max_dim(input_image)
     output_image = remove(input_image, **kwargs)
+    if crop_image:
+        output_image = crop_image(output_image)
     return get_image_bytes(output_image)
 
 def resize_to_max_dim(image: Image.Image, max_size=(1000, 1000)) -> Image.Image:
@@ -46,3 +48,7 @@ def get_MIME_from_PIL(image: Image.Image) -> MIMEImage:
         byte = buffer.getvalue()
     mime = MIMEImage(byte, _subtype=image.format.lower())
     return mime
+
+def crop_image(image: Image.Image) -> Image.Image:
+    copy = image.copy()
+    return copy.crop(copy.getbbox())
