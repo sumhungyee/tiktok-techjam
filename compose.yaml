@@ -1,20 +1,22 @@
 version: "1.0"
 services:
   backend:
-    image: backend
     build: ./backend
     depends_on:
       - database
     env_file:
-      - .env
+      - ./backend/.env
+    command: ["fastapi", "run", "./src/app.py"]
+    ports:
+      - "8000:8000"
 
   database:
     image: postgres
     env_file:
-      - .env
+      - ./backend/.env
     volumes:
-      - ./database:/docker-entrypoint-initdb.d
+      - ./backend/database:/docker-entrypoint-initdb.d
       - db:/var/lib/postgresql/data
 
 volumes:
-  db
+  db: {}

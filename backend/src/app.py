@@ -1,7 +1,3 @@
-import os
-os.environ['MINDWAVE_DATABASE_URL'] = 'sqlite:///./db/test.db'
-
-
 import random
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import StreamingResponse
@@ -14,10 +10,6 @@ from src.models.model_operations import (load_PIL_image_from_bytes,
                                          remove_background,
                                          create_small_thumbnail_base64,
                                          generate_image_hash)
-
-# from dotenv import load_dotenv
-# load_dotenv()
-# DATABASE_URL = os.getenv('MINDWAVE_DATABASE_URL')
 
 
 def get_thumbnail_and_sha256(image_data: bytes):
