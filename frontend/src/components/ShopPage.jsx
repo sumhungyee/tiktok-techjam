@@ -1,5 +1,5 @@
 // TO DO: get image as the background, then add transparent buttons
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useState } from 'react';
 import {
     Button,
     Image,
@@ -12,6 +12,10 @@ import wardrobeButton from '../assets/wardrobe_button.png'
 
 
 const ShopPage = (props) => {
+    const [wardrobeButtonVisible, setWardrobeButtonVisible] = useState(true);
+    const handleClick = () => {
+        setWardrobeButtonVisible(false);
+      };
 
     return (
     <>
@@ -31,7 +35,7 @@ const ShopPage = (props) => {
                 left='50%'
                 transform='translateX(-50%) scale(0.9)'
             />  
-
+        {wardrobeButtonVisible && (
             <Button
                 position='absolute'
                 bottom='50px'  
@@ -41,9 +45,11 @@ const ShopPage = (props) => {
                 color='transparent'
                 // color='black' // for button to appear
                 size='md'
+                onClick={handleClick} 
                 >
                 Click Me
             </Button>
+        )}
         </Box>
     </Stack>  
 
