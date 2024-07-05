@@ -81,7 +81,6 @@ def crop_image(image: Image.Image) -> Image.Image:
 
 @timer
 def get_classes():
-   
     return [
     "T-Shirt", "Crop Top", "Jeans", "Sweater", "Jacket",
     "Skirt", "Dress", "Shorts", "Blouse", "Pants",
@@ -100,7 +99,7 @@ def load_model(path : str="patrickjohncyh/fashion-clip") -> tuple[CLIPModel, CLI
     return CLIPModel.from_pretrained(path), CLIPProcessor.from_pretrained(path)
 
 @timer
-def classify_processed_image(image: Image.Image, model: CLIPModel, processor: CLIPProcessor) -> str:
+def classify_processed_image(image: Image.Image, model: CLIPModel, processor: CLIPProcessor) -> tuple[str, np.ndarray]:
     image = image.copy()
     inputs = processor(text=get_classes(),
                    images=image, return_tensors="pt", padding=True)
@@ -108,4 +107,5 @@ def classify_processed_image(image: Image.Image, model: CLIPModel, processor: CL
     logits_per_image = outputs.logits_per_image
     probs = logits_per_image.softmax(dim=1) 
 
-    return get_classes()[np.argmax(probs.detach().numpy())]
+    array = probs.detach().numpy()
+    return get_classes()[np.argmax(array)], array
