@@ -7,11 +7,16 @@ from src.database.db_operations import DBOperation
 from src.models.model_operations import (load_PIL_image_from_bytes,
                                          remove_background,
                                          create_small_thumbnail_base64,
-                                         generate_image_hash)
+                                         generate_image_hash,
+                                         load_model,
+                                         classify_processed_image,
+                                         get_classes,
+                                         get_broad,
+                                         get_material)
 
 
 app = FastAPI()
-
+model, processor = load_model()
 
 @app.get("/user/{user_id}/wardrobe")
 def get_user_wardrobe(user_id: int) -> list[dict]:
@@ -107,7 +112,37 @@ async def upload_user_item(user_id: int, file: UploadFile = File(...)):
             return
         item_id = db.add_item(image_hash,'hat')
         db.add_item_to_user_wardrobe(user_id, item_id)
-        processed = remove_background(image_data)
+        processed : bytes = remove_background(image_data, resize=True)
+        # TAGS GENERATED HERE
+        
+        # for clarity: model understands "Clothing tops" more than "tops"
+        tags: list[str] = [] # user side
+        broad_class_dict = get_broad()
+        broad_class_for_clip = list(broad_class_dict.keys())
+        tags.append(
+            broad_class_dict[
+                classify_processed_image(load_PIL_image_from_bytes(processed), model, processor, broad_class_for_clip)[0]
+            ]
+        )
+        if tags[0] not in ["Accessories", "Swimwear"]:
+            
+            tags.append(
+                classify_processed_image(load_PIL_image_from_bytes(processed), model, processor, get_classes())[0]
+            )
+
+            #### UNSURE ABOUT THIS, CAN DELETE
+            # materials_dict = get_material()
+            # materials_for_clip = list(materials_dict.keys())
+            # tags.append(
+            #     materials_dict[
+            #         classify_processed_image(load_PIL_image_from_bytes(processed), model, processor, materials_for_clip)[0]
+            #     ]
+            # )
+            ####
+
+        # `tags` CONTAINS YOUR TAGS
+        
+        
         thumbnail = create_small_thumbnail_base64(
             load_PIL_image_from_bytes(processed)
         )
