@@ -190,3 +190,25 @@ async def upload_user_item(user_id: int, file: UploadFile = File(...)):
             load_PIL_image_from_bytes(processed)
         )
         db.set_item_processed_image(item_id, processed, thumbnail)
+
+
+@app.get("/user/{user_id}/item/{item_id}/status")
+def get_user_item_status(user_id: int, item_id: int) -> dict:
+    with DBOperation() as db:
+        wardrobe_item = db.get_user_wardrobe_item(user_id, item_id)
+        return {
+            "exists": wardrobe_item is not None,
+            "done_processing": (wardrobe_item is not None and
+                                wardrobe_item.item.processed_image is not None)
+        }
+
+
+@app.get("/shop/{shop_id}/item/{item_id}/status")
+def get_shop_item_status(shop_id: int, item_id: int) -> dict:
+    with DBOperation() as db:
+        wardrobe_item = db.get_shop_wardrobe_item(shop_id, item_id)
+        return {
+            "exists": wardrobe_item is not None,
+            "done_processing": (wardrobe_item is not None and
+                                wardrobe_item.item.processed_image is not None)
+        }

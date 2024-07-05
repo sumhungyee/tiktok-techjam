@@ -163,7 +163,11 @@ class DBOperation:
         ).all()
         return user_wishlist
 
-    def get_user_wardrobe_item(self, user_id: int, item_id: int):
+    def get_user_wardrobe_item(
+            self,
+            user_id: int,
+            item_id: int
+    ) -> Union[UserWardrobe, None]:
         """
         Get the item in the user's wardrobe
         :param user_id: ID of the user
@@ -176,7 +180,11 @@ class DBOperation:
         ).first()
         return item
 
-    def get_shop_wardrobe_item(self, shop_id: int, item_id: int):
+    def get_shop_wardrobe_item(
+            self,
+            shop_id: int,
+            item_id: int
+    ) -> Union[ShopWardrobe, None]:
         """
         Get the item in the shop's wardrobe
         :param shop_id: ID of the shop
