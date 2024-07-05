@@ -5,8 +5,6 @@
 **/.idea
 test.db
 **/*.ipynb
-**/*.jpg
-**/*.png
 **/*.jfif
 **/__pycache__/**
 **/.ipynb_checkpoints/**
