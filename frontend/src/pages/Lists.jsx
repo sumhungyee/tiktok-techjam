@@ -13,6 +13,7 @@ import {
 import { extendTheme } from "@chakra-ui/react";
 import "@fontsource/montserrat/400.css";
 import "@fontsource/montserrat/500.css";
+import { ArrowUp } from "lucide-react";
 
 const theme = extendTheme({
   fonts: {
@@ -136,7 +137,7 @@ function Lists() {
 
   const [scrollPosition, setScrollPosition] = useState(0);
   const handleScroll = () => {
-    const position = window.pageYOffset;
+    const position = window.scrollY;
     setScrollPosition(position);
   };
 
@@ -155,12 +156,11 @@ function Lists() {
         height="100vh"
         bg="#ffffff"
         color="#213547"
-        p="4"
         className="w-screen"
         position="static"
       >
-        <Tabs variant="unstyled" isFitted>
-          <TabList mb="1em">
+        <Tabs variant="unstyled" isFitted m={0}>
+          <TabList mb="0.5rem" shadow="md" pt="0.5rem" pb="0.25rem">
             <Tab _active={{ bg: "gray.50" }}>Wardrobe</Tab>
             <Tab _active={{ bg: "gray.50" }}>Wishlist</Tab>
           </TabList>
@@ -172,7 +172,7 @@ function Lists() {
                   <ItemCard
                     key={index}
                     title={item.title}
-                    description={item.tags.join(", ")}
+                    tags={item.tags}
                     thumbnail={item.thumbnail}
                   />
                 ))}
@@ -184,7 +184,7 @@ function Lists() {
                   <ItemCard
                     key={index}
                     title={item.title}
-                    description={item.tags.join(", ")}
+                    tags={item.tags}
                     thumbnail={item.thumbnail}
                   />
                 ))}
@@ -193,12 +193,18 @@ function Lists() {
           </TabPanels>
         </Tabs>
       </Box>
-      {scrollPosition > 100 && <ScrollToTopButton />}
+      <div
+        className={`transition-all duration-500 opacity-0 ${
+          scrollPosition > 100 ? "opacity-100" : ""
+        }`}
+      >
+        <ScrollToTopButton />
+      </div>
     </ChakraProvider>
   );
 }
 
-function ItemCard({ title, description, thumbnail }) {
+function ItemCard({ title, tags, thumbnail }) {
   return (
     <Box
       bg="#f9f9f9"
@@ -206,19 +212,37 @@ function ItemCard({ title, description, thumbnail }) {
       borderRadius="8px"
       mb={4}
       border="1px solid #e2e2e2"
+      shadow="sm"
+      onClick={() => {console.log("route to canvas")}}
+      _active={{ bg: "gray.100" }}
     >
-      <Box display="flex" alignItems="center" justifyContent="start" mb={2}>
+      <Box display="flex" alignItems="start" justifyContent="start">
         <img
           src={`data:image/png;base64,${thumbnail}`}
           alt={title}
-          className="w-12 h-12 rounded-md mr-3"
+          className="size-28 rounded-md mr-3"
         />
-        <Box>
+        <Box ml="2px">
           <Box fontWeight="500" className="text-left">
             {title}
           </Box>
           <Box fontSize="sm" color="gray.500">
-            {description}
+            <Box fontSize="sm" color="gray.500" display="flex" flexWrap="wrap">
+              {tags.map((tag) => (
+                <Box
+                  key={tag}
+                  bg="gray.200"
+                  color="gray.600"
+                  borderRadius="md"
+                  px={2}
+                  py={1}
+                  mr={2}
+                  mb={2}
+                >
+                  {tag}
+                </Box>
+              ))}
+            </Box>
           </Box>
         </Box>
       </Box>
@@ -238,9 +262,15 @@ function ScrollToTopButton() {
       bottom="4"
       right="4"
       colorScheme=""
-      variant="outline"
+      variant="solid"
+      textColor="black"
+      outline="0.5px solid black"
+      shadow="md"
+      rounded="full"
+      p="1px"
+      bg="white"
     >
-      Scroll to Top
+      <ArrowUp />
     </Button>
   );
 }
