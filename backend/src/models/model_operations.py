@@ -7,10 +7,20 @@ import numpy as np
 from typing import Iterable
 from email.mime.image import MIMEImage
 from transformers import CLIPProcessor, CLIPModel
-
+import time
+import logging
 import hashlib
 
+def timer(function):
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        output = function(*args, **kwargs)
+        end = time.time()
+        logging.info(f"Function {function.__name__} executed in {end - start} seconds.")
+        return output
+    return wrapper
 
+@timer
 def get_image_bytes(image: Image.Image, resize: bool=False) -> bytes:
     # ImageFile.LOAD_TRUNCATED_IMAGES = True
     if resize:
@@ -19,7 +29,7 @@ def get_image_bytes(image: Image.Image, resize: bool=False) -> bytes:
     image.save(image_byte_array, format='png')
     return image_byte_array.getvalue()
 
-
+@timer
 def load_PIL_image_from_bytes(bytes: bytes, resize: bool=False) -> Image.Image:
     image_byte_array = BytesIO(bytes)
     img = Image.open(image_byte_array)
@@ -27,6 +37,7 @@ def load_PIL_image_from_bytes(bytes: bytes, resize: bool=False) -> Image.Image:
         return resize_to_max_dim(img)
     return img
 
+@timer
 def remove_background(input_image_bytes: bytes, resize: bool=False, crop_image: bool = True, **kwargs: Optional[any]) -> bytes:
     input_image = load_PIL_image_from_bytes(input_image_bytes)
     if resize:
@@ -36,13 +47,13 @@ def remove_background(input_image_bytes: bytes, resize: bool=False, crop_image: 
         output_image = crop_image(output_image)
     return get_image_bytes(output_image)
 
-
+@timer
 def resize_to_max_dim(image: Image.Image, max_size=(1000, 1000)) -> Image.Image:
     copy = image.copy()
     copy.thumbnail(max_size)
     return copy
 
-
+@timer
 def create_small_thumbnail_base64(image: Image.Image) -> str:
     thumbnail = resize_to_max_dim(image, max_size=(200, 200))
     white_bg = Image.new("RGB", thumbnail.size, (255, 255, 255))
@@ -51,11 +62,11 @@ def create_small_thumbnail_base64(image: Image.Image) -> str:
         white_bg.save(buffer, format="JPEG")
         return base64.b64encode(buffer.getvalue()).decode("utf-8")
 
-
+@timer
 def generate_image_hash(image_bytes: bytes) -> str:
     return hashlib.sha256(image_bytes).hexdigest()
 
-
+@timer
 def get_MIME_from_PIL(image: Image.Image) -> MIMEImage:
     with BytesIO() as buffer:
         image.save(buffer, format=image.format)
@@ -63,10 +74,12 @@ def get_MIME_from_PIL(image: Image.Image) -> MIMEImage:
     mime = MIMEImage(byte, _subtype=image.format.lower())
     return mime
 
+@timer
 def crop_image(image: Image.Image) -> Image.Image:
     copy = image.copy()
     return copy.crop(copy.getbbox())
 
+@timer
 def get_classes():
    
     return [
@@ -82,13 +95,11 @@ def get_classes():
     "Kimono", "Pajamas", "Gown", "Dungarees"
     ]
 
-   
-
-    # return ["dress", "T-shirt", "shorts", "jeans", "shoes", "skirt", "jacket", "suit", "hat", "glasses"]
-
+@timer
 def load_model(path : str="patrickjohncyh/fashion-clip") -> tuple[CLIPModel, CLIPProcessor]:
     return CLIPModel.from_pretrained(path), CLIPProcessor.from_pretrained(path)
 
+@timer
 def classify_processed_image(image: Image.Image, model: CLIPModel, processor: CLIPProcessor) -> str:
     image = image.copy()
     inputs = processor(text=get_classes(),
