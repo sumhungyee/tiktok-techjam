@@ -25,6 +25,13 @@ function App() {
               }
             />
             <Route
+              exact
+              path="/shop/1"
+              element={
+                <ShopPage />
+              }
+            />
+            <Route
               path="/fabric-canvas"
               element={
                 <>
