@@ -12,3 +12,5 @@ test.db
 **/.ipynb_checkpoints/**
 **/.pytest_cache/**
 backend/prefill.env
+postgres-data
+postgres-docker-entry
