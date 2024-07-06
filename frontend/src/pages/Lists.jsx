@@ -13,7 +13,7 @@ import {
 import { extendTheme } from "@chakra-ui/react";
 import "@fontsource/montserrat/400.css";
 import "@fontsource/montserrat/500.css";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, HandPlatter } from "lucide-react";
 
 const theme = extendTheme({
   fonts: {
@@ -126,27 +126,13 @@ const mockWishlistData = [
   },
 ];
 
-function Lists() {
+function Lists(handleItemCardClick) {
   const [wardrobeItems, setWardrobeItems] = useState([]);
   const [wishlistItems, setWishlistItems] = useState([]);
 
   useEffect(() => {
     setWardrobeItems(mockWardrobeData);
     setWishlistItems(mockWishlistData);
-  }, []);
-
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const handleScroll = () => {
-    const position = window.scrollY;
-    setScrollPosition(position);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
   }, []);
 
   return (
@@ -186,6 +172,7 @@ function Lists() {
                     title={item.title}
                     tags={item.tags}
                     thumbnail={item.thumbnail}
+                    onClick={() => handleItemCardClick("todo.com")}
                   />
                 ))}
               </Box>
@@ -193,13 +180,6 @@ function Lists() {
           </TabPanels>
         </Tabs>
       </Box>
-      <div
-        className={`transition-all duration-500 opacity-0 ${
-          scrollPosition > 100 ? "opacity-100" : ""
-        }`}
-      >
-        <ScrollToTopButton />
-      </div>
     </ChakraProvider>
   );
 }
@@ -247,31 +227,6 @@ function ItemCard({ title, tags, thumbnail }) {
         </Box>
       </Box>
     </Box>
-  );
-}
-
-function ScrollToTopButton() {
-  const handleClick = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  return (
-    <Button
-      onClick={handleClick}
-      position="fixed"
-      bottom="4"
-      right="4"
-      colorScheme=""
-      variant="solid"
-      textColor="black"
-      outline="0.5px solid black"
-      shadow="md"
-      rounded="full"
-      p="1px"
-      bg="white"
-    >
-      <ArrowUp />
-    </Button>
   );
 }
 

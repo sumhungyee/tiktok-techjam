@@ -1,15 +1,10 @@
-// import { useState } from 'react'
-// import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider } from "@chakra-ui/react";
+import "./App.css";
 
-// import viteLogo from '/vite.svg'
-import './App.css'
-
-import FabricCanvas from './components/FabricJSViewport'
-import { TabBar } from './components/Figma/TabBar/TabBar';
-import ShopPage from './components/ShopPage'
-// import FabricCanvas from './components/FabricJSViewport'
-// import { TabBar } from './components/Figma/TabBar/TabBar';
-import Lists from './pages/Lists'
+import FabricCanvas from "./components/FabricJSViewport";
+import { TabBar } from "./components/Figma/TabBar/TabBar";
+import ShopPage from "./components/ShopPage";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
   const canvasHeight = window.innerHeight * 0.93;
@@ -17,20 +12,36 @@ function App() {
   return (
     <>
       <ChakraProvider>
-        <ShopPage
-        canvasWidth={window.innerWidth}
-        canvasHeight={canvasHeight}
-        />
-        {/* <FabricCanvas 
-          canvasWidth={window.innerWidth}
-          canvasHeight={canvasHeight}
-        />
-        */}
-        <TabBar />
+        {/*  */}
+        <Router>
+          <Routes>
+            <Route
+              exact
+              path="/"
+              element={
+                <ShopPage
+                  canvasWidth={window.innerWidth}
+                  canvasHeight={canvasHeight}
+                />
+              }
+            />
+            <Route
+              path="/fabric-canvas"
+              element={
+                <>
+                  <FabricCanvas
+                    canvasWidth={window.innerWidth}
+                    canvasHeight={canvasHeight}
+                  />
+                  <TabBar />
+                </>
+              }
+            />
+          </Routes>
+        </Router>
       </ChakraProvider>
-      <Lists />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

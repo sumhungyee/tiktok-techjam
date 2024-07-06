@@ -5,8 +5,6 @@
 **/.idea
 test.db
 **/*.ipynb
-**/*.jpg
-**/*.png
 **/*.jfif
 **/__pycache__/**
 **/.ipynb_checkpoints/**
@@ -14,3 +12,4 @@ test.db
 backend/prefill.env
 postgres-data
 postgres-docker-entry
+**/.DS_Store
