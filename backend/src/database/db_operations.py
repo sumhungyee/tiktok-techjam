@@ -42,31 +42,38 @@ class DBOperation:
         shops = self.session.query(Shop).all()
         return shops
 
-    def add_item(self, image_hash: str, accessory_part: str):
+    def add_item(self, image_hash: str):
         """
         Adds the item to the database, while its image submitted for processing
         :param image_hash: hash of the item's raw image
-        :param accessory_part: accessory part
         :return: ID of the item that was added
         """
-        new_image = Item(image_hash=image_hash, accessory_part=accessory_part)
+        new_image = Item(image_hash=image_hash)
         self.session.add(new_image)
         self.session.commit()
         image_id = new_image.id
         return image_id
 
-    def set_item_processed_image(self, item_id, processed_image, thumbnail):
+    def update_item_details(
+            self,
+            item_id,
+            processed_image,
+            thumbnail,
+            tags: List[str] = None
+    ):
         """
         Updates the item with its processed image
         :param item_id: ID of the item that was obtained from
         add_image_processing
         :param processed_image: Processed image binary data, byte-like object
         :param thumbnail: thumbnail of the image, in base64 format
+        :param tags: List of tags for the image, can be None
         """
         item = self.session.query(Item).filter(Item.id == item_id).first()
         if item is not None:
             item.processed_image = processed_image
             item.image_thumbnail = thumbnail
+            item.tags = ",".join(tags) if tags is not None else ""
         self.session.commit()
 
     def get_item_from_raw_hash(self, image_hash) -> Union[Item | None]:
@@ -89,16 +96,15 @@ class DBOperation:
         self.session.commit()
 
     def add_item_to_user_wardrobe(self, user_id: int, item_id: int,
-                                  description: str = None, tags: str = None):
+                                  description: str = None):
         """
         Adds an item to the user's wardrobe
         :param user_id: ID of the user
         :param item_id: ID of the item
         :param description: Description of the item (optional)
-        :param tags: Tags for the item (optional)
         """
         new_item = UserWardrobe(user_id=user_id, item_id=item_id,
-                                description=description, tags=tags)
+                                description=description)
         self.session.add(new_item)
         self.session.commit()
 
@@ -115,7 +121,7 @@ class DBOperation:
 
     def add_item_to_shop_wardrobe(self, shop_id: int, item_id: int,
                                   description: str, price_desc: str,
-                                  product_url: str, tags: str = None):
+                                  product_url: str):
         """
         Adds an item to the shop's wardrobe
         :param shop_id: ID of the shop
@@ -123,11 +129,10 @@ class DBOperation:
         :param description: Description of the item
         :param price_desc: Price description
         :param product_url: URL of the product
-        :param tags: Tags for the item (optional)
         """
         new_item = ShopWardrobe(shop_id=shop_id, item_id=item_id,
-                                description=description, tags=tags,
-                                price_desc=price_desc, product_url=product_url)
+                                description=description, price_desc=price_desc,
+                                product_url=product_url)
         self.session.add(new_item)
         self.session.commit()
 
