@@ -7,7 +7,7 @@ from src.models.model_operations import (load_PIL_image_from_bytes,
                                          remove_background,
                                          create_small_thumbnail_base64,
                                          generate_image_hash,
-                                         classify_processed_image, load_model)
+                                         load_model, get_processed_image_tags)
 
 
 app = FastAPI()
@@ -17,7 +17,7 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["*"]
 )
-classification_model, processor = load_model()
+model, processor = load_model()
 
 
 @app.get("/user/{user_id}/wardrobe")
@@ -115,12 +115,11 @@ async def upload_user_item(user_id: int, file: UploadFile = File(...)):
             return
         item_id = db.add_item(image_hash)
         db.add_item_to_user_wardrobe(user_id, item_id)
-        processed = remove_background(image_data)
+        processed = remove_background(image_data, resize=True)
         processed_pil = load_PIL_image_from_bytes(processed)
+        tags = get_processed_image_tags(processed_pil, model, processor)
         thumbnail = create_small_thumbnail_base64(processed_pil)
-        tags, _ = classify_processed_image(processed_pil, classification_model,
-                                           processor)
-        db.update_item_details(item_id, processed, thumbnail, [tags])
+        db.update_item_details(item_id, processed, thumbnail, tags)
 
 
 @app.get("/user/{user_id}/item/{item_id}/status")
