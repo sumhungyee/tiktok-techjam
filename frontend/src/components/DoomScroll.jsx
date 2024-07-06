@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Box, Text, Button } from '@chakra-ui/react';
 
+import { useNavigate } from 'react-router-dom';
+
 import video3 from '../assets/tiktoks/a1.mp4';
 import video2 from '../assets/tiktoks/a2.mp4';
 import video1 from '../assets/tiktoks/a3.mp4';
@@ -9,6 +11,8 @@ import video5 from '../assets/tiktoks/a5.mp4';
 import video6 from '../assets/tiktoks/a6.mp4';
 
 const DoomScrollPage = () => {
+    const navigate = useNavigate();
+    
     const videoRefs = useRef([
         React.createRef(), 
         React.createRef(), 
@@ -110,6 +114,7 @@ const DoomScrollPage = () => {
                             sx={{
                                 animation: 'shadowColorChange 2s infinite',
                             }}
+                            onClick={() => { navigate('/fabric-canvas') }}
                             >
                             Go To Wardrobe!
                         </Button>
