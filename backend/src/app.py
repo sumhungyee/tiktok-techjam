@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from io import BytesIO
 from src.database.db_operations import DBOperation
@@ -10,6 +11,12 @@ from src.models.model_operations import (load_PIL_image_from_bytes,
 
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"]
+)
 classification_model, processor = load_model()
 
 
@@ -37,8 +44,8 @@ def get_user_wishlist(user_id: int) -> list[dict]:
                 "thumbnail": ("" if not item.shop_item.item.image_thumbnail
                               else item.shop_item.item.image_thumbnail),
                 "description": item.shop_item.description,
-                "tags": ([] if not item.shop_item.tags
-                         else item.shop_item.tags.split(",")),
+                "tags": ([] if not item.shop_item.item.tags
+                         else item.shop_item.item.tags.split(",")),
                 "price": item.shop_item.price_desc,
                 "shop_id": item.shop_item.shop_id
             } for item in db.get_user_wishlist(user_id)]
