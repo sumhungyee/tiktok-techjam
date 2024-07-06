@@ -163,7 +163,7 @@ class DBOperation:
         ).all()
         return user_wishlist
     
-    def get_suggestions(self, item: Item):
+    def get_suggestions(self, item: Item) -> List[Item]:
         # Search through the ENTIRE database
         other_items: list[Item] = self.session.query(Item).filter(
             item.id != Item.id

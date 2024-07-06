@@ -10,6 +10,7 @@ from colorsys import rgb_to_hsv
 from colorthief import ColorThief
 from transformers import CLIPProcessor, CLIPModel
 from src.database.db_operations import DBOperation
+from src.database.db_schema import Item
 import time
 import logging
 import hashlib
@@ -94,9 +95,9 @@ def get_similarity_scores(hsvdomcols1: np.ndarray, hsvdomcols2: np.ndarray, max_
     ) / (concat.shape[0] * max_score)
 
 @timer
-def get_all_images():
+def get_all_suggestions_as_images(item: Item) -> list[Image.Image]:
     with DBOperation as db:
-        items = db.get_all_items()
+        items = db.get_suggestions(item)
         return list(
             map(
                 lambda item: load_PIL_image_from_bytes(bytes(item.processed_image)), items
