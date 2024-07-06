@@ -1,5 +1,5 @@
 // import { useState } from 'react'
-// import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react'
 
 // import viteLogo from '/vite.svg'
 import './App.css'
