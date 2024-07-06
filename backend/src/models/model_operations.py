@@ -92,19 +92,36 @@ def crop(image: Image.Image) -> Image.Image:
 
 
 @timer
-def get_classes():
+def get_classes() -> list[str]:
     return [
-        "T-Shirt", "Crop Top", "Jeans", "Sweater", "Jacket",
-        "Skirt", "Dress", "Shorts", "Blouse", "Pants",
-        "Leggings", "Cardigan", "Hoodie", "Coat", "Tank Top",
-        "Suit", "Blazer", "Sweatshirt", "Overalls", "Tracksuit",
-        "Scarf", "Hat", "Gloves", "Socks", "Boots",
-        "Sneakers", "Sandals", "Heels", "Belt", "Tie",
-        "Long Sleeved Shirt", "Vest", "Polo Shirt", "Cargo Pants",
-        "Trench Coat", "Bathrobe", "Swimsuit",
-        "Capris", "Camisole", "Peacoat", "Poncho", "Anorak",
-        "Kimono", "Pajamas", "Gown", "Dungarees"
+    "T-Shirt", "Crop Top", "Jeans", "Sweater", "Jacket",
+    "Skirt", "Dress", "Shorts", "Blouse", "Pants",
+    "Leggings", "Cardigan", "Hoodie", "Coat", "Tank Top",
+    "Suit", "Blazer", "Sweatshirt", "Overalls", "Tracksuit",
+    "Scarf", "Hat", "Gloves", "Boots", "Slippers", "Crocs",
+    "Sneakers", "Sandals", "Heels", "Belt", "Tie",
+    "Long Sleeved Shirt", "Vest", "Polo Shirt", "Cargo Pants",
+    "Trench Coat", "Swimsuit",
+    "Capris", "Camisole", "Peacoat", "Poncho", "Anorak",
+    "Kimono", "Pajamas", "Gown"
     ]
+
+def get_broad() -> dict[str, str]:
+    # CLIP model requires more clarity than human tags. Solution is to create a map
+    for_user = [
+        "Tops", "Bottoms", "Dresses", "Outerwear", "Sleepwear", "Footwear", "Headwear", "Accessories", "Swimwear"
+    ]
+    for_clip = for_user.copy()
+    for i in range(2):
+        for_clip[i] = "Clothing " + for_clip[i]
+    return dict(zip(for_clip, for_user))
+
+def get_material() -> dict[str, str]:
+    for_user = [ # metal is for sunglasses or whatever crazy accessory they have
+        "Denim", "Fabric", "Leather", "Furs", "Velvet"
+    ]
+    for_clip = list(map(lambda x: f"Clothing made from {x.lower()}", for_user.copy()))
+    return dict(zip(for_clip, for_user))
 
 
 @timer
@@ -115,14 +132,10 @@ def load_model(
 
 
 @timer
-def classify_processed_image(
-        image: Image.Image,
-        model: CLIPModel,
-        processor: CLIPProcessor
-) -> tuple[str, np.ndarray]:
+def classify_processed_image(image: Image.Image, model: CLIPModel, processor: CLIPProcessor, classes: list[str]) -> tuple[str, np.ndarray]:
     image = image.copy()
-    inputs = processor(text=get_classes(), images=image, return_tensors="pt",
-                       padding=True)
+    inputs = processor(text=classes,
+                   images=image, return_tensors="pt", padding=True)
     outputs = model(**inputs)
     logits_per_image = outputs.logits_per_image
     probs = logits_per_image.softmax(dim=1)
