@@ -18,6 +18,9 @@ import {
   IconButton,
   Flex,
   Input,
+  Alert,
+  AlertIcon,
+  HStack,
 } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper/modules";
@@ -25,7 +28,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 import { useNavigate } from "react-router";
-import { LucideCamera, X } from "lucide-react";
+import { ChevronLeft, Trash2, LucideCamera, Plus, X, CheckCircle2 } from "lucide-react";
 
 import Lists from "../pages/Lists";
 
@@ -43,10 +46,17 @@ const ListsDrawer = ({
   drawerTriggerBtnRef,
   handleItemCardClick,
 }) => {
+  const {
+    isOpen: isImageUploadOpen,
+    onOpen: onImageUploadOpen,
+    onClose: onImageUploadClose,
+  } = useDisclosure();
   const fileInputRef = useRef(null);
   const handleFileInputClick = () => {
     fileInputRef.current.click();
   };
+
+  const [fileToUpload, setFileToUpload] = useState(null);
 
   return (
     <>
@@ -71,20 +81,100 @@ const ListsDrawer = ({
           <Flex justifyContent="space-between" paddingLeft={5} paddingRight={5}>
             <Button
               variant="ghost"
-              leftIcon={<LucideCamera />}
-              onClick={handleFileInputClick}
+              leftIcon={<LucideCamera/>}
+              onClick={onImageUploadOpen}
             >
-              <Text marginLeft={2}>Add to Wardrobe</Text>
+              <Text marginLeft={2}
+              >Upload to Wardrobe</Text>
             </Button>
 
+      <AlertDialog
+        isOpen={isImageUploadOpen}
+        onClose={onImageUploadClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Upload Your Clothes 
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              <Text> Add a new item to your wardrobe by uploading an image of a piece of clothing.  </Text>
+
+              <Alert 
+                status='warning'
+                marginTop={3}
+              >
+                <AlertIcon />
+                Please upload a clear image in front of a plain background!
+              </Alert>
+
+            <Flex
+              align={'center'}
+            >
+              <Text 
+                as='b' 
+                flex={1}
+              >
+                  Step 1:
+              </Text>
+              <Input
+                type="text"
+                placeholder="Enter item name (optional)"
+                marginTop={3}
+                flex={3}
+              />
+            </Flex>
+
+            <Flex
+              align={'center'}
+            >
+              <Text 
+                as='b' 
+                flex={1}
+              >
+                  Step 2:
+              </Text>
+              <Button
+                leftIcon={ fileToUpload==null ? <LucideCamera/> : <CheckCircle2/> }
+                marginTop={3}
+                flex={3}
+                onClick={handleFileInputClick}
+                colorScheme={ fileToUpload==null ? 'gray' : 'green'}
+              >
+                { fileToUpload == null ? `Take a Photo` : 'Photo Found!'}
+              </Button>
+            </Flex>
             <Input
               ref={fileInputRef}
               type="file"
               multiple={false}
               accept="image/*"
               hidden
-              onChange={(e) => console.log(e.target.files)}
+              onChange={(e) => {
+                setFileToUpload(e.target.files[0]);
+              }}
             />
+
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button onClick={onImageUploadClose}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="green"
+                onClick={() => {
+                  onImageUploadClose();
+                }}
+                ml={3}
+              >
+                Upload
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
 
             <IconButton
               aria-label="Close Drawer"

@@ -58,7 +58,6 @@ const DoomScrollPage = () => {
 
     return (
         <>
-        {/* Aditya, behold: css-in-html-in-js */}
         <style> 
             {`
                 @keyframes shadowColorChange {
