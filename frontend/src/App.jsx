@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Box, ChakraProvider, Text } from '@chakra-ui/react'
+import { useState } from "react";
+import { Box, ChakraProvider, Text } from "@chakra-ui/react";
 import "./App.css";
 
 import FabricCanvas from "./components/FabricJSViewport";
@@ -21,14 +21,22 @@ function App() {
               exact
               path="/"
               element={
-                <DoomScrollPage />
+                <>
+                  <DoomScrollPage />
+                  <div className="relative -bottom-[93vh]">
+                    <TabBar />
+                  </div>
+                </>
               }
             />
             <Route
               exact
               path="/shop/1"
               element={
-                <ShopPage />
+                <>
+                  <ShopPage />
+                  <TabBar />
+                </>
               }
             />
             <Route
