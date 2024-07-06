@@ -6,7 +6,6 @@ os.environ['MINDWAVE_DATABASE_URL'] = 'sqlite:///./db/test.db'
 
 import base64
 import io
-import random
 import pytest
 from src.database.db_operations import DBOperation
 from hashlib import sha256
@@ -26,11 +25,14 @@ def get_thumbnail_and_sha256(image_data: bytes):
     return img_str, sha256(image_data).hexdigest()
 
 
+image_tags = ['shirt', 'skirt', 'shirt', 'sheath dress', 'idk 1', 'idk 2']
 all_images = []
 for i in range(6):
     with open(f'res/sample_images/{i + 1}.png', 'rb') as f:
         img_bytes = f.read()
-        all_images.append((img_bytes,) + get_thumbnail_and_sha256(img_bytes))
+        all_images.append((img_bytes,)
+                          + get_thumbnail_and_sha256(img_bytes)
+                          + (image_tags[i],))
 shop_items = all_images[:3]
 user_items = all_images[3:]
 
@@ -50,17 +52,13 @@ def prefill_db():
         all_shops = db.get_all_shops()
         assert set([shop.id for shop in all_shops]) == {1, 2}
         # Add some dummy shop items
-        for image, thumbnail, sha256_hash in shop_items:
-            item_id = db.add_item(sha256_hash,
-                                  'top' if random.randint(0, 1) else 'bottom',
-                                  thumbnail)
-            db.set_item_processed_image(item_id, image)
+        for image, thumbnail, sha256_hash, tags in shop_items:
+            item_id = db.add_item(sha256_hash)
+            db.update_item_details(item_id, image, thumbnail, tags.split(","))
         # Add some dummy user items
-        for image, thumbnail, sha256_hash in user_items:
-            item_id = db.add_item(sha256_hash,
-                                  'hat' if random.randint(0, 1) else 'glasses',
-                                  thumbnail)
-            db.set_item_processed_image(item_id, image)
+        for image, thumbnail, sha256_hash, tags in user_items:
+            item_id = db.add_item(sha256_hash)
+            db.update_item_details(item_id, image, thumbnail, tags.split(","))
     yield
 
 
@@ -68,9 +66,10 @@ def test_get_all_items(prefill_db):
     with DBOperation() as db:
         images = db.get_all_items()
     assert len(images) == len(all_images)
-    for index, img in enumerate(images):
-        assert img.image_hash == all_images[index][2]
-        assert img.processed_image == all_images[index][0]
+    for index, item in enumerate(images):
+        assert item.image_hash == all_images[index][2]
+        assert item.processed_image == all_images[index][0]
+        assert item.tags == all_images[index][3]
         # Image.open(io.BytesIO(img.processed_image)).show()
         # time.sleep(1)
 
@@ -91,13 +90,17 @@ def test_get_non_existent_item_with_hash(prefill_db):
 
 def test_set_non_existent_item(prefill_db):
     with DBOperation() as db:
-        db.set_item_processed_image(99999, b'Non existent image')
+        db.update_item_details(
+            99999,
+            b'Non existent image',
+            'Non existent thumbnail'
+        )
 
 
 def test_add_item_to_user_wardrobe(prefill_db):
     with DBOperation() as db:
         db.add_item_to_user_wardrobe(1, 4, 'This is a top')
-        db.add_item_to_user_wardrobe(1, 5, tags='blue,drip')
+        db.add_item_to_user_wardrobe(1, 5)
         db.add_item_to_user_wardrobe(2, 6)
         wardrobe1 = db.get_user_wardrobe(1)
         wardrobe2 = db.get_user_wardrobe(2)
@@ -106,27 +109,26 @@ def test_add_item_to_user_wardrobe(prefill_db):
         assert wardrobe1[0].item.image_hash == user_items[0][2]
         assert wardrobe1[0].item.processed_image == user_items[0][0]
         assert wardrobe1[0].description == 'This is a top'
-        assert wardrobe1[0].tags is None
+        assert wardrobe1[0].item.tags == 'sheath dress'
         assert wardrobe1[1].item.image_hash == user_items[1][2]
         assert wardrobe1[1].item.processed_image == user_items[1][0]
         assert wardrobe1[1].description is None
-        assert wardrobe1[1].tags == 'blue,drip'
+        assert wardrobe1[1].item.tags == 'idk 1'
         assert wardrobe2[0].item.image_hash == user_items[2][2]
         assert wardrobe2[0].item.processed_image == user_items[2][0]
         assert wardrobe2[0].description is None
-        assert wardrobe2[0].tags is None
+        assert wardrobe2[0].item.tags == 'idk 2'
 
 
 def test_add_item_to_shop_wardrobe(prefill_db):
     with DBOperation() as db:
         db.add_item_to_shop_wardrobe(1, 1, 'This is a top',
-                                     '$20', 'https://shop.com/top',
-                                     'red,dri-fit')
+                                     '$20', 'https://shop.com/top')
         db.add_item_to_shop_wardrobe(1, 2, 'Cool jeans',
                                      'Discount: $25 (original $30!)',
                                      'https://shop.com/jeans')
         db.add_item_to_shop_wardrobe(2, 3, 'Random hat', '$5',
-                                     'https://shop.com/hat', 'white')
+                                     'https://shop.com/hat')
         wardrobe1 = db.get_shop_wardrobe(1)
         wardrobe2 = db.get_shop_wardrobe(2)
         assert len(wardrobe1) == 2
@@ -136,27 +138,26 @@ def test_add_item_to_shop_wardrobe(prefill_db):
         assert wardrobe1[0].description == 'This is a top'
         assert wardrobe1[0].price_desc == '$20'
         assert wardrobe1[0].product_url == 'https://shop.com/top'
-        assert wardrobe1[0].tags == 'red,dri-fit'
+        assert wardrobe1[0].item.tags == 'shirt'
         assert wardrobe1[1].item.image_hash == shop_items[1][2]
         assert wardrobe1[1].item.processed_image == shop_items[1][0]
         assert wardrobe1[1].description == 'Cool jeans'
         assert wardrobe1[1].price_desc == 'Discount: $25 (original $30!)'
         assert wardrobe1[1].product_url == 'https://shop.com/jeans'
-        assert wardrobe1[1].tags is None
+        assert wardrobe1[1].item.tags == 'skirt'
         assert wardrobe2[0].item.image_hash == shop_items[2][2]
         assert wardrobe2[0].item.processed_image == shop_items[2][0]
         assert wardrobe2[0].description == 'Random hat'
         assert wardrobe2[0].price_desc == '$5'
         assert wardrobe2[0].product_url == 'https://shop.com/hat'
-        assert wardrobe2[0].tags == 'white'
+        assert wardrobe2[0].item.tags == 'shirt'
 
 
 def test_non_existent_item_to_shop_wardrobe(prefill_db):
     with pytest.raises(IntegrityError):
         with DBOperation() as db:
             db.add_item_to_shop_wardrobe(1, 99999, 'This is a top',
-                                         '$20', 'https://shop.com/top',
-                                         'red,dri-fit')
+                                         '$20', 'https://shop.com/top')
             for item in db.get_shop_wardrobe(1):
                 print(item.item_id, item.item)
 

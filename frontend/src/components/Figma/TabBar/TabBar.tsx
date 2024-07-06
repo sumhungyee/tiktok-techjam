@@ -6,7 +6,7 @@ import { AccountStrokeIconIcon } from './AccountStrokeIconIcon';
 import { ButtonShapeIcon } from './ButtonShapeIcon';
 import { HomeStrokeIconIcon } from './HomeStrokeIconIcon';
 import { MessageSolidIconIcon } from './MessageSolidIconIcon';
-import { SearchIconIcon } from './SearchIconIcon';
+import { ShoppingCart } from 'lucide-react';
 import classes from './TabBar.module.css';
 
 interface Props {
@@ -25,7 +25,7 @@ export const TabBar: FC<Props> = memo(function TabBar(props = {}) {
       </div>
       <div className={classes.home}>Home</div>
       <div className={classes.searchIcon}>
-        <SearchIconIcon className={classes.icon3} />
+        <ShoppingCart />
       </div>
       <div className={classes.shopNow}>Shop</div>
       <div className={classes.messageSolidIcon}>
