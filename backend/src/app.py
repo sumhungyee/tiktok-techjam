@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from io import BytesIO
@@ -101,20 +101,24 @@ def get_user_item(user_id: int, item_id: int) -> StreamingResponse:
 
 
 @app.post("/user/{user_id}/upload")
-async def upload_user_item(user_id: int, file: UploadFile = File(...)):
+async def upload_user_item(user_id: int,
+                           description: str = Form(None),
+                           file: UploadFile = File(...)
+):
     image_data = await file.read()
     with DBOperation() as db:
         image_hash = generate_image_hash(image_data)
         existing_item = db.get_item_from_raw_hash(image_hash)
         if existing_item is not None:
             # Item already exists (image may still be processing)
-            if db.get_user_wardrobe_item_by_item_id(user_id, existing_item.id) is not None:
+            if (db.get_user_wardrobe_item_by_item_id(user_id, existing_item.id)
+                    is not None):
                 # Already in user wardrobe, no need to add
                 return
-            db.add_item_to_user_wardrobe(user_id, existing_item.id)
+            db.add_item_to_user_wardrobe(user_id, existing_item.id, description)
             return
         item_id = db.add_item(image_hash)
-        db.add_item_to_user_wardrobe(user_id, item_id)
+        db.add_item_to_user_wardrobe(user_id, item_id, description)
         processed = remove_background(image_data, resize=True)
         processed_pil = load_PIL_image_from_bytes(processed)
         tags = get_processed_image_tags(processed_pil, model, processor)
