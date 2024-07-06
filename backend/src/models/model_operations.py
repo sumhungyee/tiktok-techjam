@@ -66,7 +66,11 @@ def resize_to_max_dim(image: Image.Image, max_size=(1000, 1000)) -> Image.Image:
 @timer
 def get_dominant_cols_in_hsv(image: Image.Image, max_size=(10, 10)) -> list[tuple] | np.ndarray:
     pooling = image.copy().resize(max_size, resample=4)
-    color_thief = PILThiefy(pooling)
+    # colorthief class does not have a constructor that accepts pil image even tho it literally loads it
+    # under the hood. bruh
+    color_thief = type('', (ColorThief,), {
+        '__init__': lambda self, source: setattr(self, "image", source)
+        })(pooling)
     rgbs = color_thief.get_palette(color_count=3, quality=1)
     return np.apply_along_axis(lambda row: rgb_to_hsv(*row), axis=1, arr=rgbs)
     # pooling_arr = np.asarray(pooling)
