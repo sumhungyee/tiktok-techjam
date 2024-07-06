@@ -15,15 +15,21 @@ import {
   DrawerBody,
   DrawerOverlay,
   DrawerContent,
-  DrawerCloseButton,
+  IconButton,
+  Flex,
+  Input,
+  Alert,
+  AlertIcon,
+  HStack,
+  Spinner,
 } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Pagination } from "swiper/modules";
+import { FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 import { useNavigate } from "react-router";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Trash2, LucideCamera, Plus, X, CheckCircle2 } from "lucide-react";
 
 import Lists from "../pages/Lists";
 
@@ -33,6 +39,7 @@ import item2 from "../assets/SHEIN EZwear Cartoon & Slogan Graphic Crop Tee.png"
 import item3 from "../assets/SHEIN EZwear Women's Drawstring Side Asymmetrical Hem Summer Tube Top.png";
 import item4 from "../assets/SHEIN MOD Ladies' Fashionable Asymmetrical Strap Ruffle Top, Light Yellow, Ideal For Summer Vacation.png";
 import item5 from "../assets/SHEIN MOD Women's Floral Print Shirred Wide Strap Tank Top.png";
+import {HARD_CODED_USER_ID, uploadItem} from "../utils/requests.js";
 
 const ListsDrawer = ({
   isOpen,
@@ -40,7 +47,29 @@ const ListsDrawer = ({
   onClose,
   drawerTriggerBtnRef,
   handleItemCardClick,
+  onDrawerClose,
+  setLoading,
 }) => {
+  const {
+    isOpen: isImageUploadOpen,
+    onOpen: onImageUploadOpen,
+    onClose: onImageUploadClose,
+  } = useDisclosure();
+  const fileInputRef = useRef(null);
+  const handleFileInputClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const [uploadItemName, setUploadItemName] = useState('');
+  const [fileToUpload, setFileToUpload] = useState(null);
+  const [updateWardrobeFlag, setUpdateWardrobeFlag] = useState(0)
+
+  const resetUploadForm = () => {
+    setUploadItemName('');
+    fileInputRef.current.value = '';
+    setFileToUpload(null);
+  }
+
   return (
     <>
       <Drawer
@@ -54,20 +83,137 @@ const ListsDrawer = ({
         className="p-0 m-0"
       >
         <DrawerOverlay />
-        <DrawerContent padding={0} margin={0} className="p-0 m-0">
-          <DrawerCloseButton position={"relative"} left={"6.5rem"} top={"1rem"}>
+
+        <DrawerContent
+          padding={0}
+          margin={0}
+          className="p-0 m-0"
+          paddingTop={5}
+        >
+          <Flex justifyContent="space-between" paddingLeft={5} paddingRight={5}>
             <Button
-              leftIcon={<ChevronLeft />}
-              onClick={() => onOpen(false)}
               variant="ghost"
-              mx={0}
+              leftIcon={<LucideCamera/>}
+              onClick={onImageUploadOpen}
             >
-              <Text>Back to dressing room</Text>
+              <Text marginLeft={2}
+              >Upload to Wardrobe</Text>
             </Button>
-          </DrawerCloseButton>
+
+      <AlertDialog
+        isOpen={isImageUploadOpen}
+        onClose={onImageUploadClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Upload Your Clothes 
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              <Text> Add a new item to your wardrobe by uploading an image of a piece of clothing.  </Text>
+
+              <Alert 
+                status='warning'
+                marginTop={3}
+              >
+                <AlertIcon />
+                Please upload a clear image in front of a plain background!
+              </Alert>
+
+            <Flex
+              align={'center'}
+            >
+              <Text 
+                as='b' 
+                flex={1}
+              >
+                  Step 1:
+              </Text>
+              <Input
+                type="text"
+                placeholder="Enter item name (optional)"
+                marginTop={3}
+                flex={3}
+                onChange={(e) => {
+                    setUploadItemName(e.target.value);
+                }}
+              />
+            </Flex>
+
+            <Flex
+              align={'center'}
+            >
+              <Text 
+                as='b' 
+                flex={1}
+              >
+                  Step 2:
+              </Text>
+              <Button
+                leftIcon={ fileToUpload==null ? <LucideCamera/> : <CheckCircle2/> }
+                marginTop={3}
+                flex={3}
+                onClick={handleFileInputClick}
+                colorScheme={ fileToUpload==null ? 'gray' : 'green'}
+              >
+                { fileToUpload == null ? `Take a Photo` : 'Photo Found!'}
+              </Button>
+            </Flex>
+            <Input
+              ref={fileInputRef}
+              type="file"
+              multiple={false}
+              accept="image/*"
+              hidden
+              onChange={(e) => {
+                setFileToUpload(e.target.files[0]);
+              }}
+            />
+
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button onClick={() => {
+                  resetUploadForm();
+                  onImageUploadClose();
+              }}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="green"
+                isDisabled={fileToUpload == null}
+                onClick={() => {
+                  uploadItem(HARD_CODED_USER_ID, uploadItemName, fileToUpload).then(() => {
+                      setUpdateWardrobeFlag(updateWardrobeFlag + 1)
+                  });
+                  resetUploadForm();
+                  onImageUploadClose();
+                }}
+                ml={3}
+              >
+                Upload
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
+            <IconButton
+              aria-label="Close Drawer"
+              icon={<X />}
+              onClick={onClose}
+              variant="ghost"
+            />
+          </Flex>
 
           <DrawerBody padding={0} mt="2rem">
-            <Lists handleItemCardClick={handleItemCardClick} />
+            <Lists 
+              handleItemCardClick={handleItemCardClick} 
+              onDrawerClose={onDrawerClose}
+              setLoading={setLoading}
+              updateWardrobe={updateWardrobeFlag}
+            />
           </DrawerBody>
         </DrawerContent>
       </Drawer>
@@ -79,6 +225,7 @@ const FabricCanvas = (props) => {
   const navigate = useNavigate();
 
   const [canvas, setCanvas] = useState();
+  const [loading, setLoading] = useState(false);
 
   const {
     isOpen: isAlertDialogOpen,
@@ -140,35 +287,33 @@ const FabricCanvas = (props) => {
   const randomItem = items[Math.floor(Math.random() * items.length)];
   const handleItemCardClick = (itemImageLink) => {
     addItem(canvas, itemImageLink);
-    isDrawerOpen(false);
   };
 
   return (
     <div>
       <canvas id="canvas" />
+
       <button
         style={{
           position: "absolute",
-          top: "35px",
-          left: "35px",
+          top: "50px",
+          left: "20px",
           fontSize: "18px",
-          alignItems: "center",
-          display: "flex",
-          gap: "10px",
+          alignItems: "left",
         }}
         onClick={() => navigate(-1)}
         ref={drawerTriggerBtnRef}
       >
-        <ChevronLeft className="mr-3"/>
-        {"Back to shop"}
+        <b style={{ fontSize: "30px", margin: 22 }}> ‹ </b> Go Back
       </button>
+
       <button
         style={{
           position: "absolute",
-          top: "60px",
+          top: "100px",
           left: "20px",
           fontSize: "18px",
-          alignItems: "center",
+          alignItems: "left",
         }}
         onClick={onDrawerOpen}
         ref={drawerTriggerBtnRef}
@@ -182,12 +327,14 @@ const FabricCanvas = (props) => {
         onClose={onDrawerClose}
         drawerTriggerBtnRef={drawerTriggerBtnRef}
         handleItemCardClick={handleItemCardClick}
+        onDrawerClose={onDrawerClose}
+        setLoading={setLoading}
       />
 
       <div
         style={{
           position: "absolute",
-          top: "60px",
+          top: "55px",
           left: "320px",
           alignItems: "center",
           justifyContent: "left",
@@ -284,6 +431,22 @@ const FabricCanvas = (props) => {
           ))}
         </Swiper>
       </Box>
+
+      <Box
+        position="fixed"
+        top="50%"
+        left="50%"
+        transform="translate(-50%, -50%)"
+        alignContent={"center"}
+        justifyContent={"center"}
+        display={loading ? "" : "none"}
+      >
+        <Spinner 
+          size="xl"
+        />
+        <Text> Preparing Your Clothes! </Text>
+      </Box>
+
     </div>
   );
 };

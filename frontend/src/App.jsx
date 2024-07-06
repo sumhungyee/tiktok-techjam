@@ -1,9 +1,11 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { useState } from "react";
+import { Box, ChakraProvider, Text } from "@chakra-ui/react";
 import "./App.css";
 
 import FabricCanvas from "./components/FabricJSViewport";
 import { TabBar } from "./components/Figma/TabBar/TabBar";
 import ShopPage from "./components/ShopPage";
+import DoomScrollPage from "./components/DoomScroll";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
@@ -19,10 +21,22 @@ function App() {
               exact
               path="/"
               element={
-                <ShopPage
-                  canvasWidth={window.innerWidth}
-                  canvasHeight={canvasHeight}
-                />
+                <>
+                  <DoomScrollPage />
+                  <div className="relative -bottom-[93vh]">
+                    <TabBar />
+                  </div>
+                </>
+              }
+            />
+            <Route
+              exact
+              path="/shop/1"
+              element={
+                <>
+                  <ShopPage />
+                  <TabBar />
+                </>
               }
             />
             <Route
