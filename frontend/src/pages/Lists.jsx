@@ -12,7 +12,13 @@ import {
   useDisclosure,
   AlertDialogOverlay,
   AlertDialogContent,
-  AlertDialogHeader, AlertDialogBody, AlertDialogFooter, AlertDialog,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialog,
+  Input,
+  InputGroup,
+  InputLeftElement,
 } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
 import "@fontsource/montserrat/400.css";
@@ -22,8 +28,9 @@ import {
   getShopItemImage,
   getUserItemImage,
   getUserWardrobe,
-  getUserWishlist
+  getUserWishlist,
 } from "../utils/requests.js";
+import { SearchIcon } from "lucide-react";
 
 const HARD_CODED_USER_ID = 1;
 
@@ -42,9 +49,11 @@ const theme = extendTheme({
   },
 });
 
-function Lists({handleItemCardClick}) {
+function Lists({ handleItemCardClick }) {
   const [wardrobeItems, setWardrobeItems] = useState([]);
   const [wishlistItems, setWishlistItems] = useState([]);
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   const {
     isOpen: isErrorDialogOpen,
@@ -62,12 +71,20 @@ function Lists({handleItemCardClick}) {
     });
   }, []);
 
+  function containsTagQuery(tags, query) {
+    query = query.toLowerCase();
+    return (
+      query === "" ||
+      tags.filter((tag) => tag.toLowerCase().includes(query)).length > 0
+    );
+  }
+
   return (
     <ChakraProvider theme={theme}>
       <AlertDialog
-          isOpen={isErrorDialogOpen}
-          leastDestructiveRef={okRef}
-          onClose={onErrorDialogClose}
+        isOpen={isErrorDialogOpen}
+        leastDestructiveRef={okRef}
+        onClose={onErrorDialogClose}
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
@@ -76,7 +93,8 @@ function Lists({handleItemCardClick}) {
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Your selected item is still being processed. Please try again later.
+              Your selected item is still being processed. Please try again
+              later.
             </AlertDialogBody>
 
             <AlertDialogFooter>
@@ -97,52 +115,80 @@ function Lists({handleItemCardClick}) {
         position="static"
       >
         <Tabs variant="unstyled" isFitted m={0}>
-          <TabList mb="0.5rem" shadow="md" pt="0.5rem" pb="0.25rem" >
-            <Tab _active={{ bg: "gray.50" }}>  My Wardrobe</Tab>
-            <Tab _active={{ bg: "gray.50" }}>  My Wishlist</Tab>
+          <TabList mb="0.5rem" shadow="md" pt="0.5rem" pb="0.25rem">
+            <Tab _active={{ bg: "gray.50" }}> My Wardrobe</Tab>
+            <Tab _active={{ bg: "gray.50" }}> My Wishlist</Tab>
           </TabList>
           <TabIndicator mt="-10px" height="2px" bg="black" borderRadius="1px" />
           <TabPanels>
             <TabPanel>
               <Box h="full" overflowY="auto">
-                {wardrobeItems.map((item, index) => (
-                  <ItemCard
-                    key={item.id}
-                    title={item.title}
-                    tags={item.tags}
-                    thumbnail={item.thumbnail}
-                    onClick={async () => {
-                      const imgBlob = await getUserItemImage(
+                <InputGroup mx="auto" width={"98%"} mb={"16px"}>
+                  <InputLeftElement pointerEvents="none">
+                    <SearchIcon className="text-gray-300" />
+                  </InputLeftElement>
+                  <Input
+                    placeholder="Search"
+                    onChange={(event) => {
+                      setSearchQuery(event.target.value);
+                    }}
+                    focusBorderColor="gray.500"
+                  />
+                </InputGroup>
+                {wardrobeItems
+                  .filter((item) => containsTagQuery(item.tags, searchQuery))
+                  .map((item, index) => (
+                    <ItemCard
+                      key={item.id}
+                      title={item.title}
+                      tags={item.tags}
+                      thumbnail={item.thumbnail}
+                      onClick={async () => {
+                        const imgBlob = await getUserItemImage(
                           HARD_CODED_USER_ID,
                           item.id,
                           onErrorDialogOpen
-                      )
-                      if (imgBlob)
-                        handleItemCardClick(URL.createObjectURL(imgBlob))
-                    }}
-                  />
-                ))}
+                        );
+                        if (imgBlob)
+                          handleItemCardClick(URL.createObjectURL(imgBlob));
+                      }}
+                    />
+                  ))}
               </Box>
             </TabPanel>
             <TabPanel>
               <Box overflowY="auto">
-                {wishlistItems.map((item, index) => (
-                  <ItemCard
-                    key={item.id}
-                    title={item.title}
-                    tags={item.tags}
-                    thumbnail={item.thumbnail}
-                    onClick={async () => {
-                      const imgBlob = await getShopItemImage(
+                <InputGroup mx="auto" width={"98%"} mb={"16px"}>
+                  <InputLeftElement pointerEvents="none">
+                    <SearchIcon className="text-gray-300" />
+                  </InputLeftElement>
+                  <Input
+                    placeholder="Search"
+                    onChange={(event) => {
+                      setSearchQuery(event.target.value);
+                    }}
+                    focusBorderColor="gray.500"
+                  />
+                </InputGroup>
+                {wishlistItems
+                  .filter((item) => containsTagQuery(item.tags, searchQuery))
+                  .map((item, index) => (
+                    <ItemCard
+                      key={item.id}
+                      title={item.title}
+                      tags={item.tags}
+                      thumbnail={item.thumbnail}
+                      onClick={async () => {
+                        const imgBlob = await getShopItemImage(
                           item.shop_id,
                           item.id,
                           onErrorDialogOpen
-                      )
-                      if (imgBlob)
-                        handleItemCardClick(URL.createObjectURL(imgBlob))
-                    }}
-                  />
-                ))}
+                        );
+                        if (imgBlob)
+                          handleItemCardClick(URL.createObjectURL(imgBlob));
+                      }}
+                    />
+                  ))}
               </Box>
             </TabPanel>
           </TabPanels>
