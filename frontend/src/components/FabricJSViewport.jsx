@@ -265,23 +265,6 @@ const FabricCanvas = (props) => {
     <div>
       <canvas id="canvas" />
 
-      {/* <button
-        style={{
-          position: "absolute",
-          top: "35px",
-          left: "35px",
-          fontSize: "18px",
-          alignItems: "center",
-          display: "flex",
-          gap: "10px",
-        }}
-        onClick={() => navigate(-1)}
-        ref={drawerTriggerBtnRef}
-      >
-        <ChevronLeft className="mr-3"/>
-        {"Back to shop"}
-      </button> */}
-
       <button
         style={{
           position: "absolute",

@@ -2,9 +2,11 @@ import {
     Button,
     Image,
     Stack,
+    IconButton
   } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import shopimage from '../assets/tiktokshop.jpeg'
+import { ChevronLeft } from 'lucide-react';
 
 
 const ShopPage = (props) => {
@@ -13,6 +15,7 @@ const ShopPage = (props) => {
     return (
         <>
             {/* Aditya, behold: css-in-html-in-js */}
+            {/* I must not let you cook: 🧯💨💨💨 🔥 ➡️ ❄️ */}
             <style> 
                 {`
                     @keyframes shadowColorChange {
@@ -35,6 +38,14 @@ const ShopPage = (props) => {
                     height={'100%'}
                     objectFit='cover'
                     objectPosition = 'top'
+                />
+                <IconButton
+                    icon={<ChevronLeft className='size-8'/>}
+                    onClick={() => { navigate(-1) }}
+                    position="absolute"
+                    backgroundColor="white"
+                    left="5px"
+                    top="14px"
                 />
                 <Button
                     position='absolute'
