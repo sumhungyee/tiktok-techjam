@@ -165,9 +165,10 @@ class DBOperation:
     
     def get_suggestions(self, item: Item):
         # Search through the ENTIRE database
-        items: list[Item] = self.session.query(Item).filter(
+        other_items: list[Item] = self.session.query(Item).filter(
             item.id != Item.id
-            ).all()
+        ).all()
+        return other_items
 
     def get_user_wardrobe_item(
             self,
