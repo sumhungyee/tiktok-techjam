@@ -71,11 +71,13 @@ function Lists({ handleItemCardClick, onDrawerClose, setLoading }) {
     });
   }, []);
 
-  function containsTagQuery(tags, query) {
+  function isSearchResult(title, tags, query) {
     query = query.toLowerCase();
+    title ??= "";
     return (
       query === "" ||
-      tags.filter((tag) => tag.toLowerCase().includes(query)).length > 0
+      tags.filter((tag) => tag.toLowerCase().includes(query)).length > 0 ||
+      title.toLowerCase().includes(query)
     );
   }
 
@@ -137,7 +139,7 @@ function Lists({ handleItemCardClick, onDrawerClose, setLoading }) {
                   />
                 </InputGroup>
                 {wardrobeItems
-                  .filter((item) => containsTagQuery(item.tags, searchQuery))
+                  .filter((item) => isSearchResult(item.description, item.tags, searchQuery))
                   .map((item, index) => (
                     <ItemCard
                       key={item.id}
@@ -175,7 +177,7 @@ function Lists({ handleItemCardClick, onDrawerClose, setLoading }) {
                   />
                 </InputGroup>
                 {wishlistItems
-                  .filter((item) => containsTagQuery(item.tags, searchQuery))
+                  .filter((item) => isSearchResult(item.description, item.tags, searchQuery))
                   .map((item, index) => (
                     <ItemCard
                       key={item.id}
@@ -208,7 +210,7 @@ function Lists({ handleItemCardClick, onDrawerClose, setLoading }) {
 function ItemCard({ title, tags, thumbnail, onClick }) {
   return (
     <Box
-      bg="#f9f9f9"
+      bg="white"
       p={4}
       borderRadius="8px"
       mb={4}
@@ -218,13 +220,15 @@ function ItemCard({ title, tags, thumbnail, onClick }) {
       _active={{ bg: "gray.100" }}
     >
       <Box display="flex" alignItems="start" justifyContent="start">
-        <img
-          src={`data:image/png;base64,${thumbnail}`}
-          alt={title}
-          className="size-28 rounded-md mr-3"
-        />
-        <Box ml="2px">
-          <Box fontWeight="500" className="text-left">
+        <div className="size-28 min-h-28 min-w-28">
+          <img
+            src={`data:image/png;base64,${thumbnail}`}
+            alt={title}
+            className="max-h-full max-w-full rounded-md mx-auto"
+          />
+        </div>
+        <Box ml="10px">
+          <Box fontWeight="500" className="text-left line-clamp-2 w-11/12">
             {title}
           </Box>
           <Box fontSize="sm" color="gray.500">
