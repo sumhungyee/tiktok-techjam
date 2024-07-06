@@ -92,7 +92,7 @@ const ListsDrawer = ({
             />
           </Flex>
 
-          <DrawerBody padding={0} mt="2rem">
+          <DrawerBody padding={0} mt="0">
             <Lists handleItemCardClick={handleItemCardClick} />
           </DrawerBody>
 
