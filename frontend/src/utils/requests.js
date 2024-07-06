@@ -12,19 +12,29 @@ export const getShopWardrobe = async (shopId) => {
     return await fetchJsonFromUrl(`${endpoint_url}shop/${shopId}/wardrobe/`);
 }
 
-export const getUserItemStatus = async (userId, itemId) => {
+const getUserItemStatus = async (userId, itemId) => {
     return await fetchJsonFromUrl(`${endpoint_url}user/${userId}/item/${itemId}/status/`);
 }
 
-export const getShopItemStatus = async (shopId, itemId) => {
+const getShopItemStatus = async (shopId, itemId) => {
     return await fetchJsonFromUrl(`${endpoint_url}shop/${shopId}/item/${itemId}/status/`);
 }
 
-export const getUserItemImage = async (userId, itemId) => {
+export const getUserItemImage = async (userId, itemId, onStillProcessing) => {
+    const itemStatus = await getUserItemStatus(userId, itemId);
+    if (!itemStatus.done_processing) {
+        onStillProcessing();
+        return null;
+    }
     return await fetchImageFromUrl(`${endpoint_url}user/${userId}/item/${itemId}/image/`);
 }
 
-export const getShopItemImage = async (shopId, itemId) => {
+export const getShopItemImage = async (shopId, itemId, onStillProcessing) => {
+    const itemStatus = await getShopItemStatus(shopId, itemId);
+    if (!itemStatus.done_processing) {
+        onStillProcessing();
+        return null;
+    }
     return await fetchImageFromUrl(`${endpoint_url}shop/${shopId}/item/${itemId}/image/`);
 }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ChakraProvider,
   Box,
@@ -9,6 +9,10 @@ import {
   TabPanel,
   TabIndicator,
   Button,
+  useDisclosure,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader, AlertDialogBody, AlertDialogFooter, AlertDialog,
 } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
 import "@fontsource/montserrat/400.css";
@@ -20,6 +24,8 @@ import {
   getUserWardrobe,
   getUserWishlist
 } from "../utils/requests.js";
+
+const HARD_CODED_USER_ID = 1;
 
 const theme = extendTheme({
   fonts: {
@@ -40,17 +46,48 @@ function Lists({handleItemCardClick}) {
   const [wardrobeItems, setWardrobeItems] = useState([]);
   const [wishlistItems, setWishlistItems] = useState([]);
 
+  const {
+    isOpen: isErrorDialogOpen,
+    onOpen: onErrorDialogOpen,
+    onClose: onErrorDialogClose,
+  } = useDisclosure();
+  const okRef = React.useRef();
+
   useEffect(() => {
-    getUserWardrobe(1).then((data) => {
+    getUserWardrobe(HARD_CODED_USER_ID).then((data) => {
       setWardrobeItems(data);
     });
-    getUserWishlist(1).then((data) => {
+    getUserWishlist(HARD_CODED_USER_ID).then((data) => {
       setWishlistItems(data);
     });
   }, []);
 
   return (
     <ChakraProvider theme={theme}>
+      <AlertDialog
+          isOpen={isErrorDialogOpen}
+          leastDestructiveRef={okRef}
+          onClose={onErrorDialogClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Item processing
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Your selected item is still being processed. Please try again later.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button onClick={onErrorDialogClose} ref={okRef}>
+                Ok
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
       <Box
         minHeight="100vh"
         height="100vh"
@@ -75,8 +112,13 @@ function Lists({handleItemCardClick}) {
                     tags={item.tags}
                     thumbnail={item.thumbnail}
                     onClick={async () => {
-                      const imgBlob = await getUserItemImage(1, item.id)
-                      handleItemCardClick(URL.createObjectURL(imgBlob))
+                      const imgBlob = await getUserItemImage(
+                          HARD_CODED_USER_ID,
+                          item.id,
+                          onErrorDialogOpen
+                      )
+                      if (imgBlob)
+                        handleItemCardClick(URL.createObjectURL(imgBlob))
                     }}
                   />
                 ))}
@@ -91,8 +133,13 @@ function Lists({handleItemCardClick}) {
                     tags={item.tags}
                     thumbnail={item.thumbnail}
                     onClick={async () => {
-                      const imgBlob = await getShopItemImage(item.shop_id, item.id)
-                      handleItemCardClick(URL.createObjectURL(imgBlob))
+                      const imgBlob = await getShopItemImage(
+                          item.shop_id,
+                          item.id,
+                          onErrorDialogOpen
+                      )
+                      if (imgBlob)
+                        handleItemCardClick(URL.createObjectURL(imgBlob))
                     }}
                   />
                 ))}
