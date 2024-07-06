@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Text, Button } from '@chakra-ui/react';
 
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +12,7 @@ import video6 from '../assets/tiktoks/a6.mp4';
 
 const DoomScrollPage = () => {
     const navigate = useNavigate();
-    
+
     const videoRefs = useRef([
         React.createRef(), 
         React.createRef(), 
