@@ -5,10 +5,12 @@ from src.database.db_operations import DBOperation
 from src.models.model_operations import (load_PIL_image_from_bytes,
                                          remove_background,
                                          create_small_thumbnail_base64,
-                                         generate_image_hash)
+                                         generate_image_hash,
+                                         classify_processed_image, load_model)
 
 
 app = FastAPI()
+classification_model, processor = load_model()
 
 
 @app.get("/user/{user_id}/wardrobe")
@@ -107,10 +109,11 @@ async def upload_user_item(user_id: int, file: UploadFile = File(...)):
         item_id = db.add_item(image_hash)
         db.add_item_to_user_wardrobe(user_id, item_id)
         processed = remove_background(image_data)
-        thumbnail = create_small_thumbnail_base64(
-            load_PIL_image_from_bytes(processed)
-        )
-        db.update_item_details(item_id, processed, thumbnail)
+        processed_pil = load_PIL_image_from_bytes(processed)
+        thumbnail = create_small_thumbnail_base64(processed_pil)
+        tags, _ = classify_processed_image(processed_pil, classification_model,
+                                           processor)
+        db.update_item_details(item_id, processed, thumbnail, [tags])
 
 
 @app.get("/user/{user_id}/item/{item_id}/status")

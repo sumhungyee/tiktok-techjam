@@ -53,11 +53,13 @@ def remove_background(
         output_image = crop(output_image)
     return get_image_bytes(output_image)
 
+
 @timer
 def resize_to_max_dim(image: Image.Image, max_size=(1000, 1000)) -> Image.Image:
     copy = image.copy()
     copy.thumbnail(max_size)
     return copy
+
 
 @timer
 def create_small_thumbnail_base64(image: Image.Image) -> str:
@@ -68,9 +70,11 @@ def create_small_thumbnail_base64(image: Image.Image) -> str:
         white_bg.save(buffer, format="JPEG")
         return base64.b64encode(buffer.getvalue()).decode("utf-8")
 
+
 @timer
 def generate_image_hash(image_bytes: bytes) -> str:
     return hashlib.sha256(image_bytes).hexdigest()
+
 
 @timer
 def get_MIME_from_PIL(image: Image.Image) -> MIMEImage:
@@ -80,35 +84,45 @@ def get_MIME_from_PIL(image: Image.Image) -> MIMEImage:
     mime = MIMEImage(byte, _subtype=image.format.lower())
     return mime
 
+
 @timer
 def crop(image: Image.Image) -> Image.Image:
     copy = image.copy()
     return copy.crop(copy.getbbox())
 
+
 @timer
 def get_classes():
     return [
-    "T-Shirt", "Crop Top", "Jeans", "Sweater", "Jacket",
-    "Skirt", "Dress", "Shorts", "Blouse", "Pants",
-    "Leggings", "Cardigan", "Hoodie", "Coat", "Tank Top",
-    "Suit", "Blazer", "Sweatshirt", "Overalls", "Tracksuit",
-    "Scarf", "Hat", "Gloves", "Socks", "Boots",
-    "Sneakers", "Sandals", "Heels", "Belt", "Tie",
-    "Long Sleeved Shirt", "Vest", "Polo Shirt", "Cargo Pants",
-    "Trench Coat", "Bathrobe", "Swimsuit",
-    "Capris", "Camisole", "Peacoat", "Poncho", "Anorak",
-    "Kimono", "Pajamas", "Gown", "Dungarees"
+        "T-Shirt", "Crop Top", "Jeans", "Sweater", "Jacket",
+        "Skirt", "Dress", "Shorts", "Blouse", "Pants",
+        "Leggings", "Cardigan", "Hoodie", "Coat", "Tank Top",
+        "Suit", "Blazer", "Sweatshirt", "Overalls", "Tracksuit",
+        "Scarf", "Hat", "Gloves", "Socks", "Boots",
+        "Sneakers", "Sandals", "Heels", "Belt", "Tie",
+        "Long Sleeved Shirt", "Vest", "Polo Shirt", "Cargo Pants",
+        "Trench Coat", "Bathrobe", "Swimsuit",
+        "Capris", "Camisole", "Peacoat", "Poncho", "Anorak",
+        "Kimono", "Pajamas", "Gown", "Dungarees"
     ]
 
-@timer
-def load_model(path : str="patrickjohncyh/fashion-clip") -> tuple[CLIPModel, CLIPProcessor]:
-    return CLIPModel.from_pretrained(path), CLIPProcessor.from_pretrained(path)
 
 @timer
-def classify_processed_image(image: Image.Image, model: CLIPModel, processor: CLIPProcessor) -> tuple[str, np.ndarray]:
+def load_model(
+        path: str = "patrickjohncyh/fashion-clip"
+) -> tuple[CLIPModel, CLIPProcessor]:
+    return CLIPModel.from_pretrained(path), CLIPProcessor.from_pretrained(path)
+
+
+@timer
+def classify_processed_image(
+        image: Image.Image,
+        model: CLIPModel,
+        processor: CLIPProcessor
+) -> tuple[str, np.ndarray]:
     image = image.copy()
-    inputs = processor(text=get_classes(),
-                   images=image, return_tensors="pt", padding=True)
+    inputs = processor(text=get_classes(), images=image, return_tensors="pt",
+                       padding=True)
     outputs = model(**inputs)
     logits_per_image = outputs.logits_per_image
     probs = logits_per_image.softmax(dim=1)
