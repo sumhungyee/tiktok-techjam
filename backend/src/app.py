@@ -20,8 +20,8 @@ def get_user_wardrobe(user_id: int) -> list[dict]:
                 "thumbnail": ("" if not item.item.image_thumbnail
                               else item.item.image_thumbnail),
                 "description": "" if not item.description else item.description,
-                "tags": ([] if not item.tags
-                         else item.tags.split(","))
+                "tags": ([] if not item.item.tags
+                         else item.item.tags.split(","))
             } for item in db.get_user_wardrobe(user_id)
         ]
 
@@ -51,8 +51,8 @@ def get_shop_items(shop_id: int) -> list[dict]:
                 "thumbnail": ("" if not item.item.image_thumbnail
                               else item.item.image_thumbnail),
                 "description": item.description,
-                "tags": ([] if not item.tags
-                         else item.tags.split(",")),
+                "tags": ([] if not item.item.tags
+                         else item.item.tags.split(",")),
                 "price": item.price_desc,
                 "link_to_product_page": item.product_url
             } for item in db.get_shop_wardrobe(shop_id)
@@ -98,18 +98,19 @@ async def upload_user_item(user_id: int, file: UploadFile = File(...)):
         image_hash = generate_image_hash(image_data)
         existing_item = db.get_item_from_raw_hash(image_hash)
         if existing_item is not None:
+            # Item already exists (image may still be processing)
             if db.get_user_wardrobe_item(user_id, existing_item.id) is not None:
                 # Already in user wardrobe, no need to add
                 return
             db.add_item_to_user_wardrobe(user_id, existing_item.id)
             return
-        item_id = db.add_item(image_hash,'hat')
+        item_id = db.add_item(image_hash)
         db.add_item_to_user_wardrobe(user_id, item_id)
         processed = remove_background(image_data)
         thumbnail = create_small_thumbnail_base64(
             load_PIL_image_from_bytes(processed)
         )
-        db.set_item_processed_image(item_id, processed, thumbnail)
+        db.update_item_details(item_id, processed, thumbnail)
 
 
 @app.get("/user/{user_id}/item/{item_id}/status")
