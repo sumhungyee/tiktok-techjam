@@ -68,15 +68,12 @@ def get_dominant_cols_in_hsv(image: Image.Image, max_size=(10, 10)) -> list[tupl
     pooling = image.copy().resize(max_size, resample=4)
     # colorthief class does not have a constructor that accepts pil image even tho it literally loads it
     # under the hood. bruh
+    # did anonymous class that overrides init
     color_thief = type('', (ColorThief,), {
         '__init__': lambda self, source: setattr(self, "image", source)
         })(pooling)
     rgbs = color_thief.get_palette(color_count=3, quality=1)
     return np.apply_along_axis(lambda row: rgb_to_hsv(*row), axis=1, arr=rgbs)
-    # pooling_arr = np.asarray(pooling)
-    # flattened = np.reshape(pooling_arr, (pooling_arr.shape[0]*pooling_arr.shape[1], 4))
-    # mask = flattened[..., 3] > 200
-    # rgbs = flattened[mask][..., 0:3]
 
 @timer
 def match_score(hue: float, saturation: float, value: float, other_hue: float, other_saturation: float, other_value: float):
