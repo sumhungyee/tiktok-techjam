@@ -97,9 +97,9 @@ function Lists({handleItemCardClick}) {
         position="static"
       >
         <Tabs variant="unstyled" isFitted m={0}>
-          <TabList mb="0.5rem" shadow="md" pt="0.5rem" pb="0.25rem">
-            <Tab _active={{ bg: "gray.50" }}>Wardrobe</Tab>
-            <Tab _active={{ bg: "gray.50" }}>Wishlist</Tab>
+          <TabList mb="0.5rem" shadow="md" pt="0.5rem" pb="0.25rem" >
+            <Tab _active={{ bg: "gray.50" }}>  My Wardrobe</Tab>
+            <Tab _active={{ bg: "gray.50" }}>  My Wishlist</Tab>
           </TabList>
           <TabIndicator mt="-10px" height="2px" bg="black" borderRadius="1px" />
           <TabPanels>

@@ -16,6 +16,9 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  IconButton,
+  Flex,
+  Input,
 } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination } from "swiper/modules";
@@ -23,7 +26,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 import { useNavigate } from "react-router";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Trash2, LucideCamera, Plus, X } from "lucide-react";
 
 import Lists from "../pages/Lists";
 
@@ -41,6 +44,11 @@ const ListsDrawer = ({
   drawerTriggerBtnRef,
   handleItemCardClick,
 }) => {
+  const fileInputRef = useRef(null);
+  const handleFileInputClick = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <>
       <Drawer
@@ -54,22 +62,43 @@ const ListsDrawer = ({
         className="p-0 m-0"
       >
         <DrawerOverlay />
-        <DrawerContent padding={0} margin={0} className="p-0 m-0">
-          <DrawerCloseButton position={"relative"} left={"6.5rem"} top={"1rem"}>
+
+        <DrawerContent padding={0} margin={0} className="p-0 m-0" paddingTop={5}>
+
+          <Flex justifyContent="space-between" paddingLeft={5} paddingRight={5}>
             <Button
-              leftIcon={<ChevronLeft />}
-              onClick={() => onOpen(false)}
               variant="ghost"
-              mx={0}
-            >
-              <Text>Back to dressing room</Text>
-            </Button>
-          </DrawerCloseButton>
+              leftIcon={<LucideCamera />}
+              onClick={handleFileInputClick}
+              >
+                <Text marginLeft={2}
+                >Add to Wardrobe</Text>
+              </Button>
+
+            <Input 
+              ref={fileInputRef}
+              type="file" 
+              multiple={false}
+              accept="image/*"
+              hidden
+              onChange={(e) => console.log(e.target.files)}
+            />
+
+            <IconButton
+              aria-label="Close Drawer"
+              icon={<X />}
+              onClick={onClose}
+              variant="ghost"
+            />
+          </Flex>
 
           <DrawerBody padding={0} mt="2rem">
             <Lists handleItemCardClick={handleItemCardClick} />
           </DrawerBody>
+
         </DrawerContent>
+
+
       </Drawer>
     </>
   );
@@ -146,7 +175,8 @@ const FabricCanvas = (props) => {
   return (
     <div>
       <canvas id="canvas" />
-      <button
+
+      {/* <button
         style={{
           position: "absolute",
           top: "35px",
@@ -161,14 +191,29 @@ const FabricCanvas = (props) => {
       >
         <ChevronLeft className="mr-3"/>
         {"Back to shop"}
-      </button>
+      </button> */}
+
       <button
         style={{
           position: "absolute",
-          top: "60px",
+          top: "50px",
           left: "20px",
           fontSize: "18px",
-          alignItems: "center",
+          alignItems: "left",
+        }}
+        onClick={() => navigate(-1)}
+        ref={drawerTriggerBtnRef}
+      >
+        <b style={{ fontSize: "30px", margin: 22 }}> ‹ </b> Go Back
+      </button>
+
+      <button
+        style={{
+          position: "absolute",
+          top: "100px",
+          left: "20px",
+          fontSize: "18px",
+          alignItems: "left",
         }}
         onClick={onDrawerOpen}
         ref={drawerTriggerBtnRef}
@@ -187,7 +232,7 @@ const FabricCanvas = (props) => {
       <div
         style={{
           position: "absolute",
-          top: "60px",
+          top: "55px",
           left: "320px",
           alignItems: "center",
           justifyContent: "left",

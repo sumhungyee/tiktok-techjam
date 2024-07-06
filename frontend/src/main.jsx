@@ -6,7 +6,7 @@ import "./styles/output.css";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <div className="size-full mt-16">
+    <div className="size-full">
       <App />
     </div>
   </React.StrictMode>,
