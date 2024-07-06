@@ -19,6 +19,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Spinner,
 } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
 import "@fontsource/montserrat/400.css";
@@ -49,7 +50,7 @@ const theme = extendTheme({
   },
 });
 
-function Lists({ handleItemCardClick }) {
+function Lists({ handleItemCardClick, onDrawerClose, setLoading }) {
   const [wardrobeItems, setWardrobeItems] = useState([]);
   const [wishlistItems, setWishlistItems] = useState([]);
 
@@ -81,6 +82,7 @@ function Lists({ handleItemCardClick }) {
 
   return (
     <ChakraProvider theme={theme}>
+
       <AlertDialog
         isOpen={isErrorDialogOpen}
         leastDestructiveRef={okRef}
@@ -144,6 +146,8 @@ function Lists({ handleItemCardClick }) {
                       tags={item.tags}
                       thumbnail={item.thumbnail}
                       onClick={async () => {
+                        setLoading(true);
+                        onDrawerClose();
                         const imgBlob = await getUserItemImage(
                           HARD_CODED_USER_ID,
                           item.id,
@@ -151,6 +155,7 @@ function Lists({ handleItemCardClick }) {
                         );
                         if (imgBlob)
                           handleItemCardClick(URL.createObjectURL(imgBlob));
+                        setLoading(false);
                       }}
                     />
                   ))}
@@ -179,6 +184,8 @@ function Lists({ handleItemCardClick }) {
                       tags={item.tags}
                       thumbnail={item.thumbnail}
                       onClick={async () => {
+                        setLoading(true);
+                        onDrawerClose();
                         const imgBlob = await getShopItemImage(
                           item.shop_id,
                           item.id,
@@ -186,6 +193,7 @@ function Lists({ handleItemCardClick }) {
                         );
                         if (imgBlob)
                           handleItemCardClick(URL.createObjectURL(imgBlob));
+                        setLoading(false);
                       }}
                     />
                   ))}
