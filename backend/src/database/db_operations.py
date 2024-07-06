@@ -202,20 +202,19 @@ class DBOperation:
         ).first()
         return item
 
-    def get_shop_wardrobe_item(
+    def get_user_wishlist_item(
             self,
             shop_id: int,
-            item_id: int
-    ) -> Union[ShopWardrobe, None]:
+            wishlist_item_id: int
+    ) -> Union[UserWishlist, None]:
         """
         Get the item in the shop's wardrobe
         :param shop_id: ID of the shop
-        :param item_id: ID of the item
-        :return: ShopWardrobe object, or None if not found
+        :param wishlist_item_id: ID of the wishlist item
+        :return: UserWishlist object, or None if not found
         """
-        item = self.session.query(ShopWardrobe).filter(
-            ShopWardrobe.shop_id == shop_id,
-            ShopWardrobe.id == item_id
+        item = self.session.query(UserWishlist).filter(
+            UserWishlist.id == wishlist_item_id
         ).first()
         return item
 

@@ -70,16 +70,16 @@ def get_shop_items(shop_id: int) -> list[dict]:
 
 @app.get("/shop/{shop_id}/item/{item_id}/image",
          response_class=StreamingResponse)
-def get_shop_item(shop_id: int, item_id: int) -> StreamingResponse:
+def get_wishlist_item(shop_id: int, item_id: int) -> StreamingResponse:
     with DBOperation() as db:
-        shop_wardrobe_item = db.get_shop_wardrobe_item(shop_id, item_id)
-        if shop_wardrobe_item is None:
+        user_wishlist_item = db.get_user_wishlist_item(shop_id, item_id)
+        if user_wishlist_item is None:
             raise HTTPException(status_code=404, detail="Shop item not found")
-        if shop_wardrobe_item.item.processed_image is None:
+        if user_wishlist_item.shop_item.item.processed_image is None:
             raise HTTPException(status_code=404,
                                 detail="Image still processing")
         return StreamingResponse(
-            BytesIO(shop_wardrobe_item.item.processed_image),
+            BytesIO(user_wishlist_item.shop_item.item.processed_image),
             media_type="image/png"
         )
 
@@ -138,11 +138,12 @@ def get_user_item_status(user_id: int, item_id: int) -> dict:
 
 
 @app.get("/shop/{shop_id}/item/{item_id}/status")
-def get_shop_item_status(shop_id: int, item_id: int) -> dict:
+def get_wishlist_item_status(shop_id: int, item_id: int) -> dict:
     with DBOperation() as db:
-        wardrobe_item = db.get_shop_wardrobe_item(shop_id, item_id)
+        wishlist_item = db.get_user_wishlist_item(shop_id, item_id)
         return {
-            "exists": wardrobe_item is not None,
-            "done_processing": (wardrobe_item is not None and
-                                wardrobe_item.item.processed_image is not None)
+            "exists": wishlist_item is not None,
+            "done_processing": (wishlist_item is not None and
+                                wishlist_item.shop_item.item.processed_image
+                                is not None)
         }
