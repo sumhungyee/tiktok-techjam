@@ -62,7 +62,7 @@ const ShopPage = (props) => {
                     }}
                     onClick={() => { navigate('/fabric-canvas') }}
                 >
-                    Go To Wardrobe!
+                    Go To Virtual Dressing Room!
                 </Button>
             </Stack>  
         </>
