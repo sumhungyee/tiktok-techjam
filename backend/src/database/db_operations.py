@@ -171,17 +171,34 @@ class DBOperation:
     def get_user_wardrobe_item(
             self,
             user_id: int,
-            item_id: int
+            wardrobe_item_id: int
     ) -> Union[UserWardrobe, None]:
         """
         Get the item in the user's wardrobe
+        :param user_id: ID of the user
+        :param wardrobe_item_id: ID of the wardrobe item
+        :return: UserWardrobe object, or None if not found
+        """
+        item = self.session.query(UserWardrobe).filter(
+            UserWardrobe.user_id == user_id,
+            UserWardrobe.id == wardrobe_item_id
+        ).first()
+        return item
+
+    def get_user_wardrobe_item_by_item_id(
+            self,
+            user_id: int,
+            item_id: int,
+    ) -> Union[UserWardrobe, None]:
+        """
+        Get the item in the user's wardrobe by the item's ID
         :param user_id: ID of the user
         :param item_id: ID of the item
         :return: UserWardrobe object, or None if not found
         """
         item = self.session.query(UserWardrobe).filter(
             UserWardrobe.user_id == user_id,
-            UserWardrobe.id == item_id
+            UserWardrobe.item_id == item_id
         ).first()
         return item
 
