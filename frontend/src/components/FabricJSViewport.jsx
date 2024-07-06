@@ -21,6 +21,7 @@ import {
   Alert,
   AlertIcon,
   HStack,
+  Spinner,
 } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper/modules";
@@ -46,6 +47,8 @@ const ListsDrawer = ({
   onClose,
   drawerTriggerBtnRef,
   handleItemCardClick,
+  onDrawerClose,
+  setLoading,
 }) => {
   const {
     isOpen: isImageUploadOpen,
@@ -202,7 +205,11 @@ const ListsDrawer = ({
           </Flex>
 
           <DrawerBody padding={0} mt="2rem">
-            <Lists handleItemCardClick={handleItemCardClick} />
+            <Lists 
+              handleItemCardClick={handleItemCardClick} 
+              onDrawerClose={onDrawerClose}
+              setLoading={setLoading}
+            />
           </DrawerBody>
         </DrawerContent>
       </Drawer>
@@ -214,6 +221,7 @@ const FabricCanvas = (props) => {
   const navigate = useNavigate();
 
   const [canvas, setCanvas] = useState();
+  const [loading, setLoading] = useState(false);
 
   const {
     isOpen: isAlertDialogOpen,
@@ -275,7 +283,6 @@ const FabricCanvas = (props) => {
   const randomItem = items[Math.floor(Math.random() * items.length)];
   const handleItemCardClick = (itemImageLink) => {
     addItem(canvas, itemImageLink);
-    onDrawerClose();
   };
 
   return (
@@ -316,6 +323,8 @@ const FabricCanvas = (props) => {
         onClose={onDrawerClose}
         drawerTriggerBtnRef={drawerTriggerBtnRef}
         handleItemCardClick={handleItemCardClick}
+        onDrawerClose={onDrawerClose}
+        setLoading={setLoading}
       />
 
       <div
@@ -418,6 +427,22 @@ const FabricCanvas = (props) => {
           ))}
         </Swiper>
       </Box>
+
+      <Box
+        position="fixed"
+        top="50%"
+        left="50%"
+        transform="translate(-50%, -50%)"
+        alignContent={"center"}
+        justifyContent={"center"}
+        display={loading ? "" : "none"}
+      >
+        <Spinner 
+          size="xl"
+        />
+        <Text> Preparing Your Clothes! </Text>
+      </Box>
+
     </div>
   );
 };

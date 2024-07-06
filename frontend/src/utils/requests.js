@@ -1,6 +1,7 @@
 const endpoint_url = 'http://localhost:8000/';
 export const HARD_CODED_USER_ID = 1;
 
+
 export const getUserWardrobe = async (userId) => {
     return await fetchJsonFromUrl(`${endpoint_url}user/${userId}/wardrobe/`);
 }
