@@ -162,6 +162,12 @@ class DBOperation:
             UserWishlist.user_id == user_id
         ).all()
         return user_wishlist
+    
+    def get_suggestions(self, item: Item):
+        # Search through the ENTIRE database
+        items: list[Item] = self.session.query(Item).filter(
+            item.id != Item.id
+            ).all()
 
     def get_user_wardrobe_item(
             self,

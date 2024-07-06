@@ -6,10 +6,18 @@ from rembg import remove
 import numpy as np
 from typing import Iterable
 from email.mime.image import MIMEImage
+from colorsys import rgb_to_hsv
+from colorthief import ColorThief
 from transformers import CLIPProcessor, CLIPModel
+from src.database.db_operations import DBOperation
 import time
 import logging
 import hashlib
+
+class PILThiefy(ColorThief):
+    def __init__(self, source):
+        self.image = source
+        # colorthief's constructor cant accept pil images
 
 def timer(function):
     def wrapper(*args, **kwargs):
@@ -54,6 +62,61 @@ def resize_to_max_dim(image: Image.Image, max_size=(1000, 1000)) -> Image.Image:
     copy = image.copy()
     copy.thumbnail(max_size)
     return copy
+
+@timer
+def get_dominant_cols_in_hsv(image: Image.Image, max_size=(10, 10)) -> list[tuple] | np.ndarray:
+    pooling = image.copy().resize(max_size, resample=4)
+    color_thief = PILThiefy(pooling)
+    rgbs = color_thief.get_palette(color_count=3, quality=1)
+    return np.apply_along_axis(lambda row: rgb_to_hsv(*row), axis=1, arr=rgbs)
+    # pooling_arr = np.asarray(pooling)
+    # flattened = np.reshape(pooling_arr, (pooling_arr.shape[0]*pooling_arr.shape[1], 4))
+    # mask = flattened[..., 3] > 200
+    # rgbs = flattened[mask][..., 0:3]
+
+@timer
+def match_score(hue: float, saturation: float, value: float, other_hue: float, other_saturation: float, other_value: float):
+    assert 0 <= other_hue <= 1
+    assert 0 <= hue <= 1
+    tup = hue, (hue+1/3)%1, (hue+2/3)%1
+
+    def helper(hue2, hues: Iterable[float]):
+        distance = min([min(abs(element - hue2), 1-abs(element - hue2)) for element in hues])
+        return max(1/(1 + distance) * (1 - distance*6), 0)
+    return helper(other_hue, tup) + 1-abs(saturation - other_saturation) + 1-abs(value - other_value)
+
+@timer
+def get_similarity_scores(hsvdomcols1: np.ndarray, hsvdomcols2: np.ndarray, max_score=3) -> float:
+    concat = np.concatenate((hsvdomcols1, hsvdomcols2), axis=1)
+    return np.sum(
+        np.apply_along_axis(lambda row: match_score(*row), axis=1, arr=concat)
+    ) / (concat.shape[0] * max_score)
+
+@timer
+def get_all_images():
+    with DBOperation as db:
+        items = db.get_all_items()
+        return list(
+            map(
+                lambda item: load_PIL_image_from_bytes(bytes(item.processed_image)), items
+            )
+        )
+
+@timer
+def rank_recommended_images_by_score(image: Image.Image, others: list[Image.Image]) -> list[Image.Image]:
+    mapping = list(
+        map(get_dominant_cols_in_hsv, others) # deep copy alr applied
+    )
+    mapping_self = get_dominant_cols_in_hsv(image)
+    mapping_final: list[float] = list(
+        map(get_similarity_scores(mapping_self, mapping))
+    )
+    sorted_ls = sorted(
+        list(zip(mapping_final, others)), key=lambda x: x[0], reverse=True
+    )
+    return zip(*sorted_ls)[1]
+
+
 
 @timer
 def create_small_thumbnail_base64(image: Image.Image) -> str:
