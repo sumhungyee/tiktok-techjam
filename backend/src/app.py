@@ -108,7 +108,7 @@ async def upload_user_item(user_id: int, file: UploadFile = File(...)):
         existing_item = db.get_item_from_raw_hash(image_hash)
         if existing_item is not None:
             # Item already exists (image may still be processing)
-            if db.get_user_wardrobe_item(user_id, existing_item.id) is not None:
+            if db.get_user_wardrobe_item_by_item_id(user_id, existing_item.id) is not None:
                 # Already in user wardrobe, no need to add
                 return
             db.add_item_to_user_wardrobe(user_id, existing_item.id)
