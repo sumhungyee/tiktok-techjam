@@ -1,4 +1,6 @@
-const endpoint_url = 'http://121.7.133.17:8000/';
+const endpoint_url = 'http://localhost:8000/';
+export const HARD_CODED_USER_ID = 1;
+
 
 export const getUserWardrobe = async (userId) => {
     return await fetchJsonFromUrl(`${endpoint_url}user/${userId}/wardrobe/`);
@@ -46,4 +48,16 @@ const fetchJsonFromUrl = async (url) => {
 const fetchImageFromUrl = async (url) => {
     const response = await fetch(url);
     return await response.blob();
+}
+
+export const uploadItem = async (userId, description, imageFile) => {
+    const formData = new FormData();
+    if (description) {
+        formData.append('description', description);
+    }
+    formData.append('file', imageFile);
+    await fetch(`${endpoint_url}user/${userId}/upload/`, {
+        method: 'POST',
+        body: formData
+    });
 }

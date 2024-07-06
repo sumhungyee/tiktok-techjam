@@ -30,10 +30,9 @@ import {
   getUserItemImage,
   getUserWardrobe,
   getUserWishlist,
+  HARD_CODED_USER_ID
 } from "../utils/requests.js";
 import { SearchIcon } from "lucide-react";
-
-const HARD_CODED_USER_ID = 1;
 
 const theme = extendTheme({
   fonts: {
@@ -142,7 +141,7 @@ function Lists({ handleItemCardClick, onDrawerClose, setLoading }) {
                   .map((item, index) => (
                     <ItemCard
                       key={item.id}
-                      title={item.title}
+                      title={item.description}
                       tags={item.tags}
                       thumbnail={item.thumbnail}
                       onClick={async () => {
@@ -180,7 +179,7 @@ function Lists({ handleItemCardClick, onDrawerClose, setLoading }) {
                   .map((item, index) => (
                     <ItemCard
                       key={item.id}
-                      title={item.title}
+                      title={item.description}
                       tags={item.tags}
                       thumbnail={item.thumbnail}
                       onClick={async () => {
