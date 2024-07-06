@@ -161,7 +161,9 @@ const FabricCanvas = (props) => {
           fontWeight={"bold"}
           color={"gray.600"}
           marginBottom={2}
-        > Suggested </Text>
+        > 
+          Suggested 
+        </Text>
         <Swiper
           slidesPerView={3}
           spaceBetween={30}
