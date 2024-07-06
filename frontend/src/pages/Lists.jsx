@@ -139,7 +139,7 @@ function Lists({ handleItemCardClick }) {
                   .map((item, index) => (
                     <ItemCard
                       key={item.id}
-                      title={item.title}
+                      title={item.description}
                       tags={item.tags}
                       thumbnail={item.thumbnail}
                       onClick={async () => {
@@ -174,7 +174,7 @@ function Lists({ handleItemCardClick }) {
                   .map((item, index) => (
                     <ItemCard
                       key={item.id}
-                      title={item.title}
+                      title={item.description}
                       tags={item.tags}
                       thumbnail={item.thumbnail}
                       onClick={async () => {
