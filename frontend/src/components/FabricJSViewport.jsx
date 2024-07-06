@@ -62,6 +62,7 @@ const ListsDrawer = ({
 
   const [uploadItemName, setUploadItemName] = useState('');
   const [fileToUpload, setFileToUpload] = useState(null);
+  const [updateWardrobeFlag, setUpdateWardrobeFlag] = useState(0)
 
   const resetUploadForm = () => {
     setUploadItemName('');
@@ -183,7 +184,9 @@ const ListsDrawer = ({
                 colorScheme="green"
                 isDisabled={fileToUpload == null}
                 onClick={() => {
-                  uploadItem(HARD_CODED_USER_ID, uploadItemName, fileToUpload);
+                  uploadItem(HARD_CODED_USER_ID, uploadItemName, fileToUpload).then(() => {
+                      setUpdateWardrobeFlag(updateWardrobeFlag + 1)
+                  });
                   resetUploadForm();
                   onImageUploadClose();
                 }}
@@ -209,6 +212,7 @@ const ListsDrawer = ({
               handleItemCardClick={handleItemCardClick} 
               onDrawerClose={onDrawerClose}
               setLoading={setLoading}
+              updateWardrobe={updateWardrobeFlag}
             />
           </DrawerBody>
         </DrawerContent>

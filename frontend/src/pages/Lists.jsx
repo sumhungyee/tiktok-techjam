@@ -49,7 +49,7 @@ const theme = extendTheme({
   },
 });
 
-function Lists({ handleItemCardClick, onDrawerClose, setLoading }) {
+function Lists({ handleItemCardClick, onDrawerClose, setLoading, updateWardrobe }) {
   const [wardrobeItems, setWardrobeItems] = useState([]);
   const [wishlistItems, setWishlistItems] = useState([]);
 
@@ -69,7 +69,7 @@ function Lists({ handleItemCardClick, onDrawerClose, setLoading }) {
     getUserWishlist(HARD_CODED_USER_ID).then((data) => {
       setWishlistItems(data);
     });
-  }, []);
+  }, [updateWardrobe]);
 
   function isSearchResult(title, tags, query) {
     query = query.toLowerCase();
