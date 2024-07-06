@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
 import {
     Button,
     Image,
-    Box,
     Stack,
   } from '@chakra-ui/react';
-
+import { useNavigate } from 'react-router-dom';
 import shopimage from '../assets/tiktokshop.jpeg'
 
 
 const ShopPage = (props) => {
+    const navigate = useNavigate();
+
     return (
         <>
             {/* Aditya, behold: css-in-html-in-js */}
@@ -48,6 +48,7 @@ const ShopPage = (props) => {
                     sx={{
                         animation: 'shadowColorChange 3s infinite',
                     }}
+                    onClick={() => { navigate('/fabric-canvas') }}
                 >
                     Go To Wardrobe!
                 </Button>

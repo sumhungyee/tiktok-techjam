@@ -1,0 +1,9 @@
+db/
+prefill_db.py
+prefill.env
+.env
+res/
+tests/
+pytest.ini
+.pytest
+.pytest_cache/
