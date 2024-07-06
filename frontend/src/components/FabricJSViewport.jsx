@@ -15,7 +15,6 @@ import {
   DrawerBody,
   DrawerOverlay,
   DrawerContent,
-  DrawerCloseButton,
   IconButton,
   Flex,
   Input,
@@ -24,7 +23,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Pagination } from "swiper/modules";
+import { FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
@@ -73,8 +72,12 @@ const ListsDrawer = ({
       >
         <DrawerOverlay />
 
-        <DrawerContent padding={0} margin={0} className="p-0 m-0" paddingTop={5}>
-
+        <DrawerContent
+          padding={0}
+          margin={0}
+          className="p-0 m-0"
+          paddingTop={5}
+        >
           <Flex justifyContent="space-between" paddingLeft={5} paddingRight={5}>
             <Button
               variant="ghost"
@@ -144,7 +147,7 @@ const ListsDrawer = ({
             </Flex>
             <Input
               ref={fileInputRef}
-              type="file" 
+              type="file"
               multiple={false}
               accept="image/*"
               hidden
@@ -184,10 +187,7 @@ const ListsDrawer = ({
           <DrawerBody padding={0} mt="2rem">
             <Lists handleItemCardClick={handleItemCardClick} />
           </DrawerBody>
-
         </DrawerContent>
-
-
       </Drawer>
     </>
   );
