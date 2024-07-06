@@ -39,6 +39,7 @@ import item2 from "../assets/SHEIN EZwear Cartoon & Slogan Graphic Crop Tee.png"
 import item3 from "../assets/SHEIN EZwear Women's Drawstring Side Asymmetrical Hem Summer Tube Top.png";
 import item4 from "../assets/SHEIN MOD Ladies' Fashionable Asymmetrical Strap Ruffle Top, Light Yellow, Ideal For Summer Vacation.png";
 import item5 from "../assets/SHEIN MOD Women's Floral Print Shirred Wide Strap Tank Top.png";
+import {HARD_CODED_USER_ID, uploadItem} from "../utils/requests.js";
 
 const ListsDrawer = ({
   isOpen,
@@ -57,7 +58,14 @@ const ListsDrawer = ({
     fileInputRef.current.click();
   };
 
+  const [uploadItemName, setUploadItemName] = useState('');
   const [fileToUpload, setFileToUpload] = useState(null);
+
+  const resetUploadForm = () => {
+    setUploadItemName('');
+    fileInputRef.current.value = '';
+    setFileToUpload(null);
+  }
 
   return (
     <>
@@ -120,6 +128,9 @@ const ListsDrawer = ({
                 placeholder="Enter item name (optional)"
                 marginTop={3}
                 flex={3}
+                onChange={(e) => {
+                    setUploadItemName(e.target.value);
+                }}
               />
             </Flex>
 
@@ -156,12 +167,18 @@ const ListsDrawer = ({
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button onClick={onImageUploadClose}>
+              <Button onClick={() => {
+                  resetUploadForm();
+                  onImageUploadClose();
+              }}>
                 Cancel
               </Button>
               <Button
                 colorScheme="green"
+                isDisabled={fileToUpload == null}
                 onClick={() => {
+                  uploadItem(HARD_CODED_USER_ID, uploadItemName, fileToUpload);
+                  resetUploadForm();
                   onImageUploadClose();
                 }}
                 ml={3}

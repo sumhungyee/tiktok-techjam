@@ -22,10 +22,9 @@ import {
   getShopItemImage,
   getUserItemImage,
   getUserWardrobe,
-  getUserWishlist
+  getUserWishlist,
+  HARD_CODED_USER_ID
 } from "../utils/requests.js";
-
-const HARD_CODED_USER_ID = 1;
 
 const theme = extendTheme({
   fonts: {
