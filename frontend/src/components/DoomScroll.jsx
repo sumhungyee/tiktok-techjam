@@ -113,9 +113,9 @@ const DoomScrollPage = () => {
                             sx={{
                                 animation: 'shadowColorChange 2s infinite',
                             }}
-                            onClick={() => { navigate('/fabric-canvas') }}
+                            onClick={() => { navigate('/shop/1') }}
                             >
-                            Go To Wardrobe!
+                            Go To Shop!
                         </Button>
                     )}
                 </Box>
