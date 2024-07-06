@@ -140,7 +140,7 @@ const FabricCanvas = (props) => {
   const randomItem = items[Math.floor(Math.random() * items.length)];
   const handleItemCardClick = (itemImageLink) => {
     addItem(canvas, itemImageLink);
-    isDrawerOpen(false);
+    onDrawerClose();
   };
 
   return (
