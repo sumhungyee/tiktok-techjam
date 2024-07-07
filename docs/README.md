@@ -10,7 +10,7 @@ Rembg is a python library which uses machine learning models under the hood to r
 
 ## Image Tagging
 
-Image tagging is done using a machine learning model (Fashion-CLIP)[https://huggingface.co/patrickjohncyh/fashion-clip]. Default classes are first defined, and the machine learning model classifies each image by tag.
+Image tagging is done using a machine learning model [Fashion-CLIP](https://huggingface.co/patrickjohncyh/fashion-clip). Default classes are first defined, and the machine learning model classifies each image by tag.
 
 ## Suggestions
 
@@ -18,7 +18,7 @@ Clothing suggestions are done by considering clothing colours from an artistic p
 
 For clothing suggestions, we first consider a _selected_ piece of clothing and compare its colour palette to all _other_ clothing items, before assigning a similarity score for the _other_ pieces of clothing. For _all_ images, we resize the image into a 10 by 10 image to extract the average colours of the image. Then, we extract the dominant colours out of these 100 pixels. 
 
-Then, we convert the rgb values for the dominant colours into hsv values. The reason is that it is (often advised)[https://ivyandpearlboutique.com/blogs/fashion-howto/fashion-colors-matching-clothing-colors-using-color-wheel] to select colours that are complementary or analogous (similar), based on the colour wheel. The hsv conversion provides easy access to colour wheel coordinates.
+Then, we convert the rgb values for the dominant colours into hsv values. The reason is that it is [often advised](https://ivyandpearlboutique.com/blogs/fashion-howto/fashion-colors-matching-clothing-colors-using-color-wheel) to select colours that are complementary or analogous (similar), based on the colour wheel. The hsv conversion provides easy access to colour wheel coordinates.
 
 ![HSV](image.png)
 Source: <https://medium.com/neurosapiens/segmentation-and-classification-with-hsv-8f2406c62b39>
