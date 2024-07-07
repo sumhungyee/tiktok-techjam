@@ -13,3 +13,4 @@ backend/prefill.env
 postgres-data
 postgres-docker-entry
 **/.DS_Store
+**/.pytest_cache/**
