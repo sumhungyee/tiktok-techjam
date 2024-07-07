@@ -41,4 +41,4 @@ By integrating these features, MindWave transforms the TikTok Shop experience, p
 
 ## API Documentation
 
-Found in `./docs/api_docs.md`
+Found (here)[/docs/api_docs.md]
