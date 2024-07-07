@@ -38,3 +38,7 @@ By integrating these features, MindWave transforms the TikTok Shop experience, p
 ## Datasets and Assets Used
 - [Kaggle Fashion Design Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)
 - Lucide: Used for icon pack and SVG components
+
+## API Documentation
+
+Found in `./docs/api_docs.md`
