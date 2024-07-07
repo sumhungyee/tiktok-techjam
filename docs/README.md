@@ -25,9 +25,9 @@ Source: <https://medium.com/neurosapiens/segmentation-and-classification-with-hs
 
 Typically, hues are represented in radians from $0$ to $2\pi$. However, in the `colorsys` module, hues (h) take up a range $h \in [0, 1]$. Similarly, saturation (s) and value (v) take up the same range $s, v \in [0, 1]$. To provide a higher score for _analogous_ or _complementary_ colour palettes, we measure the distance between the _selected_ clothing's dominant hues and the _other_ clothing's dominant hues.
 
-$$D(h_1, h_2) = \min {|h_1 - h_2|, 1 - |h_1 - h_2|}$$
+$$D(h_1, h_2) = \min (|h_1 - h_2|, 1 - |h_1 - h_2|)$$
 
 We also do the same for the _selected_ clothing's complement hues, $h^c = h + 0.5$
-$$D(h_1^c, h_2) = \min {|h_1^c - h_2|, 1 - |h_1^c - h_2|}$$
+$$D(h_1^c, h_2) = \min (|h_1^c - h_2|, 1 - |h_1^c - h_2|)$$
 
 We then assign a score based on these distances, assigning a high score to small or medium distances for dominant hues, which allows for similar or analogous hues, and only very small distances for complementary hues, which allows for complementary hues. Lastly, we also take into account the similarity between $s$ and $v$ values and assign higher scores for smaller differences.
