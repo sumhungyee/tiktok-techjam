@@ -182,12 +182,17 @@ def get_suggestions_for_item(user_id: int, list_name: str, item_id: int) -> list
     with DBOperation() as db:
         if list_name == "wardrobe":
             item = db.get_user_wardrobe_item(user_id, item_id)
+            if item is None:
+                raise HTTPException(status_code=404,
+                                    detail="Wardrobe item not found")
         elif list_name == "wishlist":
-            item = db.get_user_wishlist_item(item_id)
+            wishlist_item = db.get_user_wishlist_item(item_id)
+            if wishlist_item is None:
+                raise HTTPException(status_code=404,
+                                    detail="Wishlist item not found")
+            item = wishlist_item.shop_item
         else:
             raise HTTPException(status_code=404, detail="List not found")
-        if item is None:
-            raise HTTPException(status_code=404, detail="Item not found")
         other_items = db.get_all_other_items(item.item)
         other_items_dict = {
             other_item.id: other_item for other_item in other_items
@@ -200,5 +205,6 @@ def get_suggestions_for_item(user_id: int, list_name: str, item_id: int) -> list
               ) for other_item in other_items]
         )
         return [{
-            item_id: other_items_dict[item_id].image_thumbnail
+            "id": item_id,
+            "thumbnail": other_items_dict[item_id].image_thumbnail
         } for item_id in item_ranking[:15]]  # Top 15 only

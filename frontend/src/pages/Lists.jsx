@@ -158,7 +158,11 @@ function Lists({ handleItemCardClick, onDrawerClose, setLoading, updateWardrobe 
                           onErrorDialogOpen
                         );
                         if (imgBlob)
-                          handleItemCardClick(URL.createObjectURL(imgBlob));
+                          handleItemCardClick(
+                              URL.createObjectURL(imgBlob),
+                              item.id,
+                              "wardrobe"
+                          );
                         setLoading(false);
                       }}
                     />
@@ -197,7 +201,11 @@ function Lists({ handleItemCardClick, onDrawerClose, setLoading, updateWardrobe 
                           onErrorDialogOpen
                         );
                         if (imgBlob)
-                          handleItemCardClick(URL.createObjectURL(imgBlob));
+                          handleItemCardClick(
+                              URL.createObjectURL(imgBlob),
+                              item.id,
+                              "wishlist"
+                          );
                         setLoading(false);
                       }}
                     />
@@ -226,7 +234,7 @@ function ItemCard({ title, tags, thumbnail, onClick }) {
       <Box display="flex" alignItems="start" justifyContent="start">
         <div className="size-28 min-h-28 min-w-28">
           <img
-            src={`data:image/png;base64,${thumbnail}`}
+            src={`data:image/jpeg;base64,${thumbnail}`}
             alt={title}
             className="max-h-full max-w-full rounded-md mx-auto"
           />

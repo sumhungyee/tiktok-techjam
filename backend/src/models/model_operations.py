@@ -9,8 +9,6 @@ from colorsys import rgb_to_hsv
 from colorthief import ColorThief
 from transformers import CLIPProcessor, CLIPModel
 from typing import Iterable
-from src.database.db_operations import DBOperation
-from src.database.db_schema import Item
 import time
 import logging
 import hashlib
