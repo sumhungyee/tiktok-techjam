@@ -33,13 +33,11 @@ import { ChevronLeft, Trash2, LucideCamera, Plus, X, CheckCircle2 } from "lucide
 
 import Lists from "../pages/Lists";
 
-// Will be served via API later
-import item1 from "../assets/Pleated Skirt mimi momo.png";
-import item2 from "../assets/SHEIN EZwear Cartoon & Slogan Graphic Crop Tee.png";
-import item3 from "../assets/SHEIN EZwear Women's Drawstring Side Asymmetrical Hem Summer Tube Top.png";
-import item4 from "../assets/SHEIN MOD Ladies' Fashionable Asymmetrical Strap Ruffle Top, Light Yellow, Ideal For Summer Vacation.png";
-import item5 from "../assets/SHEIN MOD Women's Floral Print Shirred Wide Strap Tank Top.png";
-import {HARD_CODED_USER_ID, uploadItem} from "../utils/requests.js";
+import {
+    getItemImage, getSuggestions,
+    HARD_CODED_USER_ID,
+    uploadItem
+} from "../utils/requests.js";
 
 const ListsDrawer = ({
   isOpen,
@@ -208,8 +206,8 @@ const ListsDrawer = ({
           </Flex>
 
           <DrawerBody padding={0} mt="2rem">
-            <Lists 
-              handleItemCardClick={handleItemCardClick} 
+            <Lists
+              handleItemCardClick={handleItemCardClick}
               onDrawerClose={onDrawerClose}
               setLoading={setLoading}
               updateWardrobe={updateWardrobeFlag}
@@ -226,6 +224,9 @@ const FabricCanvas = (props) => {
 
   const [canvas, setCanvas] = useState();
   const [loading, setLoading] = useState(false);
+  const [canvasObjectCount, setCanvasObjectCount] = useState(0);
+  const [lastAddedItemInfo, setLastAddedItemInfo] = useState({});
+  const [suggestionItems, setSuggestionItems] = useState([]);
 
   const {
     isOpen: isAlertDialogOpen,
@@ -254,8 +255,21 @@ const FabricCanvas = (props) => {
     };
   }, []);
 
-  const addItem = (canvas, item) => {
-    fabric.Image.fromURL(item, (img) => {
+    useEffect(() => {
+      if (canvasObjectCount !== 1 || lastAddedItemInfo.id === undefined) {
+        return
+      }
+      getSuggestions(
+          HARD_CODED_USER_ID,
+          lastAddedItemInfo.id,
+          lastAddedItemInfo.listName
+      ).then((data) => {
+        setSuggestionItems(data);
+      });
+    }, [canvasObjectCount, lastAddedItemInfo])
+
+  const addItem = (canvas, imageUrl, itemId, itemList) => {
+    fabric.Image.fromURL(imageUrl, (img) => {
       img.set({
         left: 70,
         top: 250,
@@ -268,6 +282,8 @@ const FabricCanvas = (props) => {
         scaleY: 0.28,
       });
       canvas.add(img);
+      setLastAddedItemInfo({ id: itemId, listName: itemList })
+      setCanvasObjectCount(canvas.getObjects().length);
     });
   };
 
@@ -275,6 +291,8 @@ const FabricCanvas = (props) => {
     const activeObject = canvas.getActiveObject();
     if (activeObject) {
       canvas.remove(activeObject);
+      setLastAddedItemInfo({})
+      setCanvasObjectCount(canvas.getObjects().length);
     }
   };
 
@@ -282,11 +300,8 @@ const FabricCanvas = (props) => {
     canvas.clear();
   };
 
-  // TODO: Replace with Aditya's menu, which sould return an item to add
-  const items = [item1, item2, item3, item4, item5];
-  const randomItem = items[Math.floor(Math.random() * items.length)];
-  const handleItemCardClick = (itemImageLink) => {
-    addItem(canvas, itemImageLink);
+  const handleItemCardClick = (itemImageLink, itemId, listName) => {
+    addItem(canvas, itemImageLink, itemId, listName);
   };
 
   return (
@@ -419,13 +434,21 @@ const FabricCanvas = (props) => {
           modules={[FreeMode]}
           className="suggestionSwiper"
         >
-          {items.map((item, index) => (
-            <SwiperSlide key={index}>
+          {suggestionItems.map((item, index) => (
+            <SwiperSlide
+                key={index}
+                className="size-28 min-h-28 min-w-28"
+            >
               <img
-                src={item}
+                src={`data:image/jpeg;base64,${item.thumbnail}`}
                 alt="item"
-                style={{ width: "100%", height: "100%" }}
-                onClick={() => addItem(canvas, item)}
+                onClick={async () => {
+                  const imgBlob = await getItemImage(item.id, () => {});
+                  if (imgBlob) {
+                    addItem(canvas, URL.createObjectURL(imgBlob));
+                  }
+                }}
+                className="max-h-full max-w-full rounded-md mx-auto"
               />
             </SwiperSlide>
           ))}
@@ -441,7 +464,7 @@ const FabricCanvas = (props) => {
         justifyContent={"center"}
         display={loading ? "" : "none"}
       >
-        <Spinner 
+        <Spinner
           size="xl"
         />
         <Text> Preparing Your Clothes! </Text>

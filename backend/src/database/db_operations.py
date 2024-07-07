@@ -82,10 +82,21 @@ class DBOperation:
         :param image_hash: hash of the raw image
         :return: the Item object, or None if not found
         """
-        image = self.session.query(Item).filter(
+        item = self.session.query(Item).filter(
             Item.image_hash == image_hash
         ).first()
-        return image
+        return item
+
+    def get_item_by_id(self, item_id) -> Union[Item | None]:
+        """
+        Gets the item with the given ID
+        :param item_id: ID of the item
+        :return: the Item object, or None if not found
+        """
+        item = self.session.query(Item).filter(
+            Item.id == item_id
+        ).first()
+        return item
 
     def get_all_items(self):
         images = self.session.query(Item).all()
@@ -168,7 +179,7 @@ class DBOperation:
         ).all()
         return user_wishlist
     
-    def get_suggestions(self, item: Item) -> List[Item]:
+    def get_all_other_items(self, item: Item) -> List[Item]:
         # Search through the ENTIRE database
         other_items: list[Item] = self.session.query(Item).filter(
             item.id != Item.id
@@ -211,12 +222,10 @@ class DBOperation:
 
     def get_user_wishlist_item(
             self,
-            shop_id: int,
             wishlist_item_id: int
     ) -> Union[UserWishlist, None]:
         """
         Get the item in the shop's wardrobe
-        :param shop_id: ID of the shop
         :param wishlist_item_id: ID of the wishlist item
         :return: UserWishlist object, or None if not found
         """
