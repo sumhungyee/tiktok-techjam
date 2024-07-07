@@ -21,9 +21,11 @@ The virtual dressing room is conveniently accessible via a pop-up button on the 
 
 ## Running the Project
 ### Backend
-Ensure that you create a .env file in the root directory - refer to sample.env for the values to be set.
+Create a `.env` file in the root folder using `cp sample.env .env`.
+
+Then run the following command:
 ```
-docker-compose up
+docker-compose up --build
 ```
 ### Frontend
 ```
@@ -67,8 +69,3 @@ Found [here](/docs/api_docs.md)
 ## Technical Report
 
 Found [here](/docs/README.md)
-
-## Setup
-
-1. Create a `.env` file in the root folder using `cp sample.env .env`.
-2. Ensure that docker is installed and run `docker-compose up --build`
