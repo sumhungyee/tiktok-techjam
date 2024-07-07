@@ -167,6 +167,13 @@ class DBOperation:
             UserWishlist.user_id == user_id
         ).all()
         return user_wishlist
+    
+    def get_suggestions(self, item: Item) -> List[Item]:
+        # Search through the ENTIRE database
+        other_items: list[Item] = self.session.query(Item).filter(
+            item.id != Item.id
+        ).all()
+        return other_items
 
     def get_user_wardrobe_item(
             self,
@@ -202,20 +209,19 @@ class DBOperation:
         ).first()
         return item
 
-    def get_shop_wardrobe_item(
+    def get_user_wishlist_item(
             self,
             shop_id: int,
-            item_id: int
-    ) -> Union[ShopWardrobe, None]:
+            wishlist_item_id: int
+    ) -> Union[UserWishlist, None]:
         """
         Get the item in the shop's wardrobe
         :param shop_id: ID of the shop
-        :param item_id: ID of the item
-        :return: ShopWardrobe object, or None if not found
+        :param wishlist_item_id: ID of the wishlist item
+        :return: UserWishlist object, or None if not found
         """
-        item = self.session.query(ShopWardrobe).filter(
-            ShopWardrobe.shop_id == shop_id,
-            ShopWardrobe.id == item_id
+        item = self.session.query(UserWishlist).filter(
+            UserWishlist.id == wishlist_item_id
         ).first()
         return item
 
