@@ -1,7 +1,7 @@
 # tiktok-techjam
 
 ## Personal Virtual Dressing Room 
-Problem statement: On enhancing tailored discovery on tiktok shop
+*_Problem statement: On enhancing tailored discovery on tiktok shop_*
 
 On the TikTok Shop journey, users often feel overwhelmed by the sheer volume of available options, endlessly scrolling through product pages. MindWave revolutionizes this experience by hyperpersonalizing the search for ideal fashion products.
 
@@ -18,6 +18,19 @@ The virtual dressing room is conveniently accessible via a pop-up button on the 
 - The standout feature of MindWave is the _virtual dressing room_, offering users a blank canvas to style themselves. This feature is conveniently accessible via a pop-up button on the 'For You' page when fashion-related ads appear, or from any virtual shop page within TikTok Shop. In the virtual dressing room, users can mix and match outfits effortlessly, combining items from their wardrobe and wishlist to find their perfect fit.
 
 - Lastly, we also offer a _suggestions_ feature, which provides a list of recommended outfits that complement a selected piece of clothing. This feature makes use of colour theory, and our recommendation system looks out for other clothing pieces whose colour palette are similar to the current piece of clothing, or forms its complementary colour palette.
+
+## Running the Project
+### Backend
+Ensure that you create a .env file in the root directory - refer to sample.env for the values to be set.
+```
+docker-compose up
+```
+### Frontend
+```
+cd frontend
+npm install
+npm run dev
+```
 
 ## General Description
 > [!NOTE]
@@ -44,7 +57,7 @@ The virtual dressing room is conveniently accessible via a pop-up button on the 
 * **Transformers**: Used for machine learning tasks such as background removal and image classification
 
 ## Datasets and Assets Used
-- [Kaggle Fashion Design Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)
+- [Kaggle Fashion Design Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset) (in our demo).
 - Lucide: Used for icon pack and SVG components
 
 ## API Documentation
