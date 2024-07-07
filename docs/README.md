@@ -1,3 +1,7 @@
+# Technical Documentation: Frontend
+
+
+
 # Technical Documentation: Backend Models and Methods
 
 ## Rembg
