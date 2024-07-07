@@ -11,6 +11,19 @@ The virtual dressing room is conveniently accessible via a pop-up button on the 
 
 By integrating these features, MindWave transforms the TikTok Shop experience, providing a tailored, intuitive, and engaging way to discover their ideal fashion products.
 
+## Running the Project
+### Backend
+Ensure that you create a .env file in the root directory - refer to sample.env for the values to be set.
+```
+docker-compose up
+```
+### Frontend
+```
+cd frontend
+npm install
+npm run dev
+```
+
 ## General Description
 > [!NOTE]
 > For more details, please refer to our technical documentation under the `docs` folder.
