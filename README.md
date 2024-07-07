@@ -36,7 +36,7 @@ By integrating these features, MindWave transforms the TikTok Shop experience, p
 * **Transformers**: Used for machine learning tasks such as background removal and image classification
 
 ## Datasets and Assets Used
-- [Kaggle Fashion Design Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)
+- [Kaggle Fashion Design Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset) (in our demo).
 - Lucide: Used for icon pack and SVG components
 
 ## API Documentation
