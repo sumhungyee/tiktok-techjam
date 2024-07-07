@@ -7,9 +7,17 @@ On the TikTok Shop journey, users often feel overwhelmed by the sheer volume of 
 
 With MindWave, users can seamlessly add items to their wishlist and later access them in a virtual dressing room. This innovative feature eliminates the need to compare multiple product pages, allowing users to mix and match outfits effortlessly to find their perfect fit.
 
-The virtual dressing room is conveniently accessible via a pop-up button on the 'For You' page when fashion-related ads appear, or from any virtual shop page within TikTok Shop. From the dressing room, users can navigate to their wardrobe page, which consists of two components: clothes they personally own and their wishlist.
+The virtual dressing room is conveniently accessible via a pop-up button on the 'For You' page when fashion-related ads appear, or from any virtual shop page within TikTok Shop. From the dressing room, users can navigate to their wardrobe page, which consists of two components: clothes they personally own and their wishlist. By integrating these features, MindWave transforms the TikTok Shop experience, providing a tailored, intuitive, and engaging way to discover their ideal fashion products.
 
-By integrating these features, MindWave transforms the TikTok Shop experience, providing a tailored, intuitive, and engaging way to discover their ideal fashion products.
+## Features Offered
+
+- Users are able to upload pictures of their clothes. This should be done with their clothes placed on a flat surface. With the use of sophisticated Machine Learning models, these images are tagged and the background for the clothes are removed. The use of tagging allows for searchability, while the removal of image backgrounds improves the styling experience. These processed images are then stored in a database and only accessible to the user via the _User Wardrobe_. 
+
+- Likewise, businesses and shops are also able to upload images of clothing items to their very own _Shop Wardrobe_. These images are available to users, who maintain a _User Wishlist_ for styling purposes before purchase.
+
+- The standout feature of MindWave is the _virtual dressing room_, offering users a blank canvas to style themselves. This feature is conveniently accessible via a pop-up button on the 'For You' page when fashion-related ads appear, or from any virtual shop page within TikTok Shop. In the virtual dressing room, users can mix and match outfits effortlessly, combining items from their wardrobe and wishlist to find their perfect fit.
+
+- Lastly, we also offer a _suggestions_ feature, which provides a list of recommended outfits that complement a selected piece of clothing. This feature makes use of colour theory, and our recommendation system looks out for other clothing pieces whose colour palette are similar to the current piece of clothing, or forms its complementary colour palette.
 
 ## Running the Project
 ### Backend
@@ -55,3 +63,12 @@ npm run dev
 ## API Documentation
 
 Found [here](/docs/api_docs.md)
+
+## Technical Report
+
+Found [here](/docs/README.md)
+
+## Setup
+
+1. Create a `.env` file in the root folder using `cp sample.env .env`.
+2. Ensure that docker is installed and run `docker-compose up --build`
