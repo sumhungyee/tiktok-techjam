@@ -7,7 +7,8 @@ from src.models.model_operations import (load_PIL_image_from_bytes,
                                          remove_background,
                                          create_small_thumbnail_base64,
                                          generate_image_hash,
-                                         load_model, get_processed_image_tags)
+                                         load_model, get_processed_image_tags,
+                                         rank_recommended_item_id_by_score)
 
 
 app = FastAPI()
@@ -72,9 +73,10 @@ def get_shop_items(shop_id: int) -> list[dict]:
          response_class=StreamingResponse)
 def get_wishlist_item(shop_id: int, item_id: int) -> StreamingResponse:
     with DBOperation() as db:
-        user_wishlist_item = db.get_user_wishlist_item(shop_id, item_id)
+        user_wishlist_item = db.get_user_wishlist_item(item_id)
         if user_wishlist_item is None:
-            raise HTTPException(status_code=404, detail="Shop item not found")
+            raise HTTPException(status_code=404,
+                                detail="Wishlist item not found")
         if user_wishlist_item.shop_item.item.processed_image is None:
             raise HTTPException(status_code=404,
                                 detail="Image still processing")
@@ -96,6 +98,21 @@ def get_user_item(user_id: int, item_id: int) -> StreamingResponse:
                                 detail="Image still processing")
         return StreamingResponse(
             BytesIO(wardrobe_item.item.processed_image),
+            media_type="image/png"
+        )
+
+
+@app.get("/item/{item_id}/image", response_class=StreamingResponse)
+def get_item_by_id(item_id) -> StreamingResponse:
+    with DBOperation() as db:
+        item = db.get_item_by_id(item_id)
+        if item is None:
+            raise HTTPException(status_code=404, detail="Item not found")
+        if item.processed_image is None:
+            raise HTTPException(status_code=404,
+                                detail="Image still processing")
+        return StreamingResponse(
+            BytesIO(item.processed_image),
             media_type="image/png"
         )
 
@@ -140,10 +157,48 @@ def get_user_item_status(user_id: int, item_id: int) -> dict:
 @app.get("/shop/{shop_id}/item/{item_id}/status")
 def get_wishlist_item_status(shop_id: int, item_id: int) -> dict:
     with DBOperation() as db:
-        wishlist_item = db.get_user_wishlist_item(shop_id, item_id)
+        wishlist_item = db.get_user_wishlist_item(item_id)
         return {
             "exists": wishlist_item is not None,
             "done_processing": (wishlist_item is not None and
                                 wishlist_item.shop_item.item.processed_image
                                 is not None)
         }
+
+
+@app.get("/item/{item_id}/status")
+def get_item_status(item_id: int) -> dict:
+    with DBOperation() as db:
+        item = db.get_item_by_id(item_id)
+        return {
+            "exists": item is not None,
+            "done_processing": (item is not None and
+                                item.processed_image is not None)
+        }
+
+
+@app.get("/user/{user_id}/{list_name}/item/{item_id}/suggestions")
+def get_suggestions_for_item(user_id: int, list_name: str, item_id: int) -> list[dict]:
+    with DBOperation() as db:
+        if list_name == "wardrobe":
+            item = db.get_user_wardrobe_item(user_id, item_id)
+        elif list_name == "wishlist":
+            item = db.get_user_wishlist_item(item_id)
+        else:
+            raise HTTPException(status_code=404, detail="List not found")
+        if item is None:
+            raise HTTPException(status_code=404, detail="Item not found")
+        other_items = db.get_all_other_items(item.item)
+        other_items_dict = {
+            other_item.id: other_item for other_item in other_items
+        }
+
+        item_ranking = rank_recommended_item_id_by_score(
+            load_PIL_image_from_bytes(item.item.processed_image),
+            [(other_item.id,
+              load_PIL_image_from_bytes(other_item.processed_image)
+              ) for other_item in other_items]
+        )
+        return [{
+            item_id: other_items_dict[item_id].image_thumbnail
+        } for item_id in item_ranking[:15]]  # Top 15 only

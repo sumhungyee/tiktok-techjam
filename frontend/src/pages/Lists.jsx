@@ -49,6 +49,8 @@ const theme = extendTheme({
   },
 });
 
+const sortItemByDescendingId = (item, other) => other.id - item.id;
+
 function Lists({ handleItemCardClick, onDrawerClose, setLoading, updateWardrobe }) {
   const [wardrobeItems, setWardrobeItems] = useState([]);
   const [wishlistItems, setWishlistItems] = useState([]);
@@ -140,6 +142,7 @@ function Lists({ handleItemCardClick, onDrawerClose, setLoading, updateWardrobe 
                 </InputGroup>
                 {wardrobeItems
                   .filter((item) => isSearchResult(item.description, item.tags, searchQuery))
+                  .sort(sortItemByDescendingId)
                   .map((item, index) => (
                     <ItemCard
                       key={item.id}
@@ -178,6 +181,7 @@ function Lists({ handleItemCardClick, onDrawerClose, setLoading, updateWardrobe 
                 </InputGroup>
                 {wishlistItems
                   .filter((item) => isSearchResult(item.description, item.tags, searchQuery))
+                  .sort(sortItemByDescendingId)
                   .map((item, index) => (
                     <ItemCard
                       key={item.id}
