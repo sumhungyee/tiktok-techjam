@@ -1,7 +1,7 @@
 # tiktok-techjam
 
 ## Personal Virtual Dressing Room 
-Problem statement: On enhancing tailored discovery on tiktok shop
+*_Problem statement: On enhancing tailored discovery on tiktok shop_*
 
 On the TikTok Shop journey, users often feel overwhelmed by the sheer volume of available options, endlessly scrolling through product pages. MindWave revolutionizes this experience by hyperpersonalizing the search for ideal fashion products.
 
