@@ -49,7 +49,11 @@ The virtual dressing room is conveniently accessible via a pop-up button on the 
 
 ## API Documentation
 
-Found (here)[/docs/api_docs.md]
+Found [here](/docs/api_docs.md)
+
+## Technical Report
+
+Found [here](/docs/README.md)
 
 ## Setup
 
