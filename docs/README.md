@@ -23,7 +23,7 @@ Then, we convert the rgb values for the dominant colours into hsv values. The re
 ![HSV](image.png)
 Source: <https://medium.com/neurosapiens/segmentation-and-classification-with-hsv-8f2406c62b39>
 
-Typically, hues are represented in radians from $0$ to $2\pi$. However, in the `colorsys` module, hues (h) take up a range $h \in [0, 1]$. Similarly, saturation (s) and value (v) take up the same range $s, v \in [0, 1]$. To provide a higher score for _analogous_ or _complementary_ colour palettes, we measure the distance between the _selected_ clothing's dominant hues and the _other_ clothing's dominant hues.
+Typically, hues are represented in radians from $0$ to $2\pi$. However, in the `colorsys` module, hues ($h$) take up a range $h \in [0, 1]$. Similarly, saturation ($s$) and value ($v$) take up the same range $s, v \in [0, 1]$. To provide a higher score for _analogous_ or _complementary_ colour palettes, we measure the distance between the _selected_ clothing's dominant hues and the _other_ clothing's dominant hues.
 
 $$D(h_1, h_2) = \min (|h_1 - h_2|, 1 - |h_1 - h_2|)$$
 
