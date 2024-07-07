@@ -79,15 +79,28 @@ def get_dominant_cols_in_hsv(image: Image.Image, max_size=(10, 10)) -> np.ndarra
     return np.apply_along_axis(lambda row: rgb_to_hsv(*row), axis=1, arr=rgbs)
 
 
+# @timer
+# def match_score(hue: float, saturation: float, value: float, other_hue: float, other_saturation: float, other_value: float):
+#     assert 0 <= other_hue <= 1
+#     assert 0 <= hue <= 1
+#     tup = hue, (hue+1/3)%1, (hue+2/3)%1
+
+#     def helper(hue2, hues: Iterable[float], pow: int = 4):
+#         mult = len(hues) * 2
+#         distance = min([min(abs(element - hue2), 1-abs(element - hue2)) for element in hues])
+#         return max(1/(1 + distance) * (1 - (distance*mult)**pow), 0)
+#     return helper(other_hue, tup) + 1-abs(saturation - other_saturation) + 1-abs(value - other_value)
+
 @timer
 def match_score(hue: float, saturation: float, value: float, other_hue: float, other_saturation: float, other_value: float):
     assert 0 <= other_hue <= 1
     assert 0 <= hue <= 1
-    tup = hue, (hue+1/3)%1, (hue+2/3)%1
+    tup = hue, (hue+1/2)%1
 
-    def helper(hue2, hues: Iterable[float]):
-        distance = min([min(abs(element - hue2), 1-abs(element - hue2)) for element in hues])
-        return max(1/(1 + distance) * (1 - distance*6), 0)
+    def helper(hue2, hues: tuple[float], pow: int = 4):
+        mult = len(hues) * 2
+        distance, distance_opp = min(abs(hues[0] - hue2), 1-abs(hues[0] - hue2)), min(abs(hues[1] - hue2), 1-abs(hues[1] - hue2))
+        return max(1/(1 + distance) * (1 - (distance*mult)**pow),  1/(1 + distance) * (1 - distance_opp*mult),  0)
     return helper(other_hue, tup) + 1-abs(saturation - other_saturation) + 1-abs(value - other_value)
 
 
