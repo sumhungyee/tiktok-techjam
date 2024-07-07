@@ -5,7 +5,11 @@ from io import BytesIO
 from rembg import remove
 import numpy as np
 from email.mime.image import MIMEImage
+from colorsys import rgb_to_hsv
+from colorthief import ColorThief
 from transformers import CLIPProcessor, CLIPModel
+from src.database.db_operations import DBOperation
+from src.database.db_schema import Item
 import time
 import logging
 import hashlib
@@ -61,6 +65,62 @@ def resize_to_max_dim(image: Image.Image, max_size=(1000, 1000)) -> Image.Image:
     copy = image.copy()
     copy.thumbnail(max_size)
     return copy
+
+
+@timer
+def get_dominant_cols_in_hsv(image: Image.Image, max_size=(10, 10)) -> list[tuple] | np.ndarray:
+    pooling = image.copy().resize(max_size, resample=4)
+    # colorthief class does not have a constructor that accepts pil image even tho it literally loads it
+    # under the hood. bruh
+    # did anonymous class that overrides init
+    color_thief = type('', (ColorThief,), {
+        '__init__': lambda self, source: setattr(self, "image", source)
+        })(pooling)
+    rgbs = color_thief.get_palette(color_count=3, quality=1)
+    return np.apply_along_axis(lambda row: rgb_to_hsv(*row), axis=1, arr=rgbs)
+
+@timer
+def match_score(hue: float, saturation: float, value: float, other_hue: float, other_saturation: float, other_value: float):
+    assert 0 <= other_hue <= 1
+    assert 0 <= hue <= 1
+    tup = hue, (hue+1/3)%1, (hue+2/3)%1
+
+    def helper(hue2, hues: Iterable[float]):
+        distance = min([min(abs(element - hue2), 1-abs(element - hue2)) for element in hues])
+        return max(1/(1 + distance) * (1 - distance*6), 0)
+    return helper(other_hue, tup) + 1-abs(saturation - other_saturation) + 1-abs(value - other_value)
+
+@timer
+def get_similarity_scores(hsvdomcols1: np.ndarray, hsvdomcols2: np.ndarray, max_score=3) -> float:
+    concat = np.concatenate((hsvdomcols1, hsvdomcols2), axis=1)
+    return np.sum(
+        np.apply_along_axis(lambda row: match_score(*row), axis=1, arr=concat)
+    ) / (concat.shape[0] * max_score)
+
+@timer
+def get_all_suggestions_as_images(item: Item) -> list[Image.Image]:
+    with DBOperation as db:
+        items = db.get_suggestions(item)
+        return list(
+            map(
+                lambda item: load_PIL_image_from_bytes(bytes(item.processed_image)), items
+            )
+        )
+
+@timer
+def rank_recommended_images_by_score(image: Image.Image, others: list[Image.Image]) -> list[Image.Image]:
+    mapping = list(
+        map(get_dominant_cols_in_hsv, others) # deep copy alr applied
+    )
+    mapping_self = get_dominant_cols_in_hsv(image)
+    mapping_final: list[float] = list(
+        map(get_similarity_scores(mapping_self, mapping))
+    )
+    sorted_ls = sorted(
+        list(zip(mapping_final, others)), key=lambda x: x[0], reverse=True
+    )
+    return zip(*sorted_ls)[1]
+
 
 
 @timer
