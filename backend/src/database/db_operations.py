@@ -23,6 +23,19 @@ class DBOperation:
         user_id = new_user.id
         return user_id
 
+    def get_user_with_id(self, user_id):
+        user = self.session.query(User).filter(User.id == user_id).first()
+        return user
+
+    def add_user_with_id(self, user_id):
+        """
+        Adds a user to the database with the given ID
+        :param user_id: ID of the user
+        """
+        new_user = User(id=user_id)
+        self.session.add(new_user)
+        self.session.commit()
+
     def get_all_users(self):
         users = self.session.query(User).all()
         return users
@@ -250,3 +263,8 @@ class DBOperation:
         self.session.query(Shop).delete()
         self.session.query(Item).delete()
         self.session.commit()
+
+
+with DBOperation() as db:
+    if db.get_user_with_id(1) is None:
+        db.add_user_with_id(1)
