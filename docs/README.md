@@ -1,6 +1,13 @@
 # Technical Documentation: Frontend
 
-## React + Vite
+## Libraries/Packages used
+- Vite
+- ChakraUI
+- TailwindCSS
+- FabricJS
+
+### Assets
+Lucide
 
 ### Installation
 ```
