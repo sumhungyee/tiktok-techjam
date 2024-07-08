@@ -40,6 +40,8 @@ docker-compose up --build
 > Ensure that your window size is 432p by 932p, which is the aspect ratio of an Iphone 14 Pro Max (the intended device).
 
 You may access the app on a preferred browser at `http://localhost:5173`.
+![Screenshot 2024-07-09 045058](https://github.com/sumhungyee/tiktok-techjam/assets/113227987/fdc6920b-70cd-43c6-abee-07bd14eeafab)
+
 
 > [!TIP]
 > We have included a few images in the `test-images` folder that can be seen from the root directory.
