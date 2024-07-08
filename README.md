@@ -38,6 +38,8 @@ cd frontend
 npm install
 npm run dev
 ```
+> [!NOTE] 
+> Ensure that your window size is 432 by 932p
 
 ## General Description
 > [!NOTE]
