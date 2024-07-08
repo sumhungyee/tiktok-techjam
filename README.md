@@ -80,7 +80,7 @@ Here is a sample of what our demo looks like.
 
 ## API Documentation
 
-Found [here](/docs/api_docs.md)
+Found [here](/docs/api_docs.md). 
 Alternatively, after running the app with  `docker-compose`, access the `FastAPI` docs after the container network is set-up.
 ```shell
 backend-1   | 
@@ -103,7 +103,7 @@ backend-1   | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to 
 backend-1   | INFO:     172.28.0.1:44316 - "GET /docs HTTP/1.1" 200 OK
 backend-1   | INFO:     172.28.0.1:44316 - "GET /openapi.json HTTP/1.1" 200 OK
 ```
-Navigate to `http://localhost:8000/docs`.
+Navigate to `http://localhost:8000/docs` to access the API documentation (swagger).
 
 ## Technical Report
 
