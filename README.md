@@ -1,4 +1,5 @@
 # tiktok-techjam
+## [Youtube Link](https://www.youtube.com/watch?v=xS9flWdUzRg)
 
 ## Personal Virtual Dressing Room 
 *_Problem statement: On enhancing tailored discovery on tiktok shop_*
@@ -20,13 +21,17 @@ The virtual dressing room is conveniently accessible via a pop-up button on the 
 - Lastly, we also offer a _suggestions_ feature, which provides a list of recommended outfits that complement a selected piece of clothing. This feature makes use of colour theory, and our recommendation system looks out for other clothing pieces whose colour palette are similar to the current piece of clothing, or forms its complementary colour palette.
 
 ## Running the Project
-### Backend
-Create a `.env` file in the root folder using `cp sample.env .env`.
 
+Create a `.env` file in the root folder using `cp sample.env .env`.
+Execute the script:
+```shell
+./backend/download_CLIP.sh
+```
 Then run the following command:
 ```
 docker-compose up --build
 ```
+
 ### Frontend
 ```
 cd frontend
