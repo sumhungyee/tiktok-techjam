@@ -42,6 +42,8 @@ docker-compose up --build
 You may access the app on a preferred browser at `http://localhost:5173`.
 
 Here is a sample of what our demo looks like.
+<br>
+
 ![Screenshot 2024-07-09 045058](https://github.com/sumhungyee/tiktok-techjam/assets/113227987/fdc6920b-70cd-43c6-abee-07bd14eeafab)
 
 
