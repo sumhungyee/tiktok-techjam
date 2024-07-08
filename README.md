@@ -69,6 +69,29 @@ docker-compose up --build
 ## API Documentation
 
 Found [here](/docs/api_docs.md)
+Alternatively, after running the app with  `docker-compose`, access the `FastAPI` docs after the container network is set-up.
+```shell
+backend-1   | 
+backend-1   |  ╭─────────── FastAPI CLI - Production mode ───────────╮
+backend-1   |  │                                                     │
+backend-1   |  │  Serving at: http://0.0.0.0:8000                    │
+backend-1   |  │                                                     │
+backend-1   |  │  API docs: http://0.0.0.0:8000/docs                 │
+backend-1   |  │                                                     │
+backend-1   |  │  Running in production mode, for development use:   │
+backend-1   |  │                                                     │
+backend-1   |  │  fastapi dev                                        │
+backend-1   |  │                                                     │
+backend-1   |  ╰─────────────────────────────────────────────────────╯
+backend-1   | 
+backend-1   | INFO:     Started server process [1]
+backend-1   | INFO:     Waiting for application startup.
+backend-1   | INFO:     Application startup complete.
+backend-1   | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+backend-1   | INFO:     172.28.0.1:44316 - "GET /docs HTTP/1.1" 200 OK
+backend-1   | INFO:     172.28.0.1:44316 - "GET /openapi.json HTTP/1.1" 200 OK
+```
+Navigate to `http://localhost:8000/docs`.
 
 ## Technical Report
 
