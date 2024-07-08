@@ -36,14 +36,8 @@ Then run the following command:
 docker-compose up --build
 ```
 
-### Frontend
-```
-cd frontend
-npm install
-npm run dev
-```
 > [!NOTE] 
-> Ensure that your window size is 432 by 932p
+> Ensure that your window size is 432p by 932p, which is the aspect ratio of an Iphone 14 Pro Max (the intended device).
 
 ## General Description
 > [!NOTE]
