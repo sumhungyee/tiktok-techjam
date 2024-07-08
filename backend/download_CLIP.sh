@@ -12,4 +12,9 @@ if [ ! -d "./backend/src/models/fashion-clip" ]; then
 find ./backend/src/fashion-clip/ -type f -o -type d -name .git -delete
 
 echo CLIP directory exists
+
+cd backend/src/models/fashion-clip
+
+# Delete the .git and .gitattributes files
+rm -rf .git .gitattributes
 fi
