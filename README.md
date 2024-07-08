@@ -39,6 +39,8 @@ docker-compose up --build
 > [!NOTE] 
 > Ensure that your window size is 432p by 932p, which is the aspect ratio of an Iphone 14 Pro Max (the intended device).
 
+You may access the app on a preferred browser at `http://localhost:5173`.
+
 > [!TIP]
 > We have included a few images in the `test-images` folder that can be seen from the root directory.
 > Feel free to experiment with them!
