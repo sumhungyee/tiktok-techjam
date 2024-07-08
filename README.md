@@ -1,5 +1,8 @@
 # tiktok-techjam
 ## [Youtube Link](https://www.youtube.com/watch?v=xS9flWdUzRg)
+![Thumbnail](thumbnail.png)
+
+> [!TIP] In this demo, ensure that you are connected to the internet to facilitate the fast download of models.
 
 ## Personal Virtual Dressing Room 
 *_Problem statement: On enhancing tailored discovery on tiktok shop_*
