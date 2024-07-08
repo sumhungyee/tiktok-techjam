@@ -1,5 +1,16 @@
 # Technical Documentation: Frontend
 
+## React + Vite
+
+### Installation
+```
+npm i
+```
+
+### Running
+```
+npm run dev
+```
 
 
 # Technical Documentation: Backend Models and Methods

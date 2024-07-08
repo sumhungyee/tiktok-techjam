@@ -201,7 +201,7 @@ def get_material() -> dict[str, str]:
 
 @timer
 def load_model(
-        path: str = "patrickjohncyh/fashion-clip"
+        path: str = "./src/models/fashion-clip"
 ) -> tuple[CLIPModel, CLIPProcessor]:
     return CLIPModel.from_pretrained(path), CLIPProcessor.from_pretrained(path)
 
