@@ -10,7 +10,7 @@ def get_sample_image():
 
 def test_load_image_from_bytes():
     bytes_ = get_sample_image()
-    img: Image = load_image_from_bytes(bytes_)
+    img: Image = load_PIL_image_from_bytes(bytes_)
     image_byte_array = BytesIO()
     img.save(image_byte_array, format='png')
     assert image_byte_array.getvalue() == bytes_ == get_image_bytes(img)

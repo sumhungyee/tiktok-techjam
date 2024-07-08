@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the command to start the application
-CMD ["python", "-m", "src.app"]
+CMD ["fastapi", "run", "src/app.py"]
