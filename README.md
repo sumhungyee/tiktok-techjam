@@ -42,7 +42,6 @@ npm run dev
 
 ### Frontend
 
-* **JavaScript**: Used for client-side scripting and dynamic behavior
 * **React**: Used for building reusable UI components
 * **TailwindCSS**: Used for CSS styling and utility-first approach
 * **ChakraUI**: Used for UI component library and styling
