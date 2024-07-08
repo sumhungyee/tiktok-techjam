@@ -1,7 +1,7 @@
 # tiktok-techjam
 
 ![Thumbnail](thumbnail.png)
-## [Youtube Link](https://www.youtube.com/watch?v=xS9flWdUzRg)
+## [Demo Video](https://www.youtube.com/watch?v=xS9flWdUzRg)
 > [!TIP]
 > In this demo, ensure that you are connected to the internet to facilitate the fast download of models.
 
