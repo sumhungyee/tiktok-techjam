@@ -49,7 +49,7 @@ Here is a sample of what our demo looks like.
 
 > [!TIP]
 > We have included a few images in the `test-images` folder that can be seen from the root directory.
-> Feel free to experiment with them!
+> Feel free to experiment uploading them!
 
 ## General Description
 > [!NOTE]
