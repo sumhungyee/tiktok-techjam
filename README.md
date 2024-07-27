@@ -1,4 +1,4 @@
-# tiktok-techjam
+# Personal Virtual Dressing Room 
 
 ![Thumbnail](thumbnail.png)
 ## [Demo Video](https://www.youtube.com/watch?v=xS9flWdUzRg)
